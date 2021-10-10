@@ -14,12 +14,9 @@ public class Main {
             new ByteBuddy()
                     .redefine(Moja.class)
                     .method(named("pollOut")).intercept(FixedValue.value("Rabbit"))
-                    .make().saveIn(new File("./build/classes/"));
+                    .make().saveIn(new File("./bytebuddy/build/classes/java/main/"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        Moja moja = new Moja();
-//        System.out.println(moja.pollOut());
     }
 }
