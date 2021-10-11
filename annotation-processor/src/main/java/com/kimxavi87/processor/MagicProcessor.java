@@ -38,8 +38,10 @@ public class MagicProcessor extends AbstractProcessor {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "process " + simpleName);
             } else {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "can not process " + simpleName);
+                return true;
             }
 
+            // 소스코드 생성
             TypeElement typeElement = (TypeElement) element;
             ClassName className = ClassName.get(typeElement);
 
