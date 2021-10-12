@@ -8,10 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +27,9 @@ class ApplicationTests {
     MemberRepository memberRepository;
     @Autowired
     TeamRepository teamRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void saveMember() {
@@ -80,6 +84,32 @@ class ApplicationTests {
 
     @Test
     public void fetchOuterJoinPaging() {
+
+        createManyTeamsAndMembers();
+
+        // fetch join과 paging을 같이 쓰면 limit이 먹지 않는다
+        // HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!
+        // paging을 memory 에서 처리함
+        List<Team> allByName = teamRepository.findByName("liverpool", PageRequest.of(0, 10));
+        System.out.println(allByName.size());
+    }
+
+    @Test
+    public void avoidFetchJoinPaging2() {
+
+        createManyTeamsAndMembers();
+        em.flush();
+        em.clear();
+
+        List<Team> teams = (List<Team>) teamRepository.findAll();
+        for (Team team : teams) {
+            for (Member member : team.getMembers()) {
+                System.out.println(team.getName() + " : " + member.getName());
+            }
+        }
+    }
+
+    private void createManyTeamsAndMembers() {
         List<Team> premireTeams = Stream.of("liverpool", "tottenham", "ManU", "Chelsea")
                 .map(Team::new)
                 .map(team -> teamRepository.save(team))
@@ -110,10 +140,5 @@ class ApplicationTests {
         son.changeTeam(premireTeams.get(3));
         memberRepository.save(son);
 
-        // fetch join과 paging을 같이 쓰면 limit이 먹지 않는다
-        // HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!
-        // paging을 memory 에서 처리함
-        List<Team> allByName = teamRepository.findByName("liverpool", PageRequest.of(0, 10));
-        System.out.println(allByName.size());
     }
 }
