@@ -1,9 +1,9 @@
 package com.kimxavi87.spring;
 
-import com.kimxavi87.spring.entity.Member;
-import com.kimxavi87.spring.entity.Team;
-import com.kimxavi87.spring.reposiotry.MemberRepository;
-import com.kimxavi87.spring.reposiotry.TeamRepository;
+import com.kimxavi87.spring.player.entity.Member;
+import com.kimxavi87.spring.player.entity.Team;
+import com.kimxavi87.spring.player.reposiotry.MemberRepository;
+import com.kimxavi87.spring.player.reposiotry.TeamRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.kimxavi87.spring.entity;
+package com.kimxavi87.spring.player.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.kimxavi87.spring.reposiotry;
+package com.kimxavi87.spring.player.reposiotry;
 
-import com.kimxavi87.spring.entity.Member;
+import com.kimxavi87.spring.player.entity.Member;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
