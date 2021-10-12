@@ -110,6 +110,9 @@ class ApplicationTests {
         son.changeTeam(premireTeams.get(3));
         memberRepository.save(son);
 
+        // fetch join과 paging을 같이 쓰면 limit이 먹지 않는다
+        // HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!
+        // paging을 memory 에서 처리함
         List<Team> allByName = teamRepository.findByName("liverpool", PageRequest.of(0, 10));
         System.out.println(allByName.size());
     }
