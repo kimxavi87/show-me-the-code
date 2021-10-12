@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,4 +78,39 @@ class ApplicationTests {
         Assertions.assertEquals(team, team2);
     }
 
+    @Test
+    public void fetchOuterJoinPaging() {
+        List<Team> premireTeams = Stream.of("liverpool", "tottenham", "ManU", "Chelsea")
+                .map(Team::new)
+                .map(team -> teamRepository.save(team))
+                .collect(Collectors.toList());
+
+        Member torres = new Member("torres");
+        Member park = new Member("park");
+        Member gerrard = new Member("gerrard");
+        Member lampard = new Member("lampard");
+        Member evra = new Member("evra");
+        Member son = new Member("son");
+
+        torres.changeTeam(premireTeams.get(0));
+        memberRepository.save(torres);
+
+        park.changeTeam(premireTeams.get(2));
+        memberRepository.save(park);
+
+        gerrard.changeTeam(premireTeams.get(0));
+        memberRepository.save(gerrard);
+
+        lampard.changeTeam(premireTeams.get(3));
+        memberRepository.save(lampard);
+
+        evra.changeTeam(premireTeams.get(2));
+        memberRepository.save(evra);
+
+        son.changeTeam(premireTeams.get(3));
+        memberRepository.save(son);
+
+        List<Team> allByName = teamRepository.findByName("liverpool", PageRequest.of(0, 10));
+        System.out.println(allByName.size());
+    }
 }
