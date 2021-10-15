@@ -111,6 +111,19 @@ public class MemberRepositoryTests {
         memberRepository.findAll();
     }
 
+    @Test
+    public void deleteAllBy() {
+        List<Member> fromStringSets = createFromStringSets(Set.of("Park-ji-sung", "Son-heung-min", "An-jung-hwan", "xavi", "iniesta"));
+
+        List<String> deleteNames= Arrays.asList(fromStringSets.get(0).getName(), fromStringSets.get(1).getName());
+
+        // ALL 붙여도 차이 없음
+        memberRepository.deleteAllByNameIn(deleteNames);
+
+        memberRepository.findAll();
+
+    }
+
     private List<Member> createFromStringSets(Set<String> strings) {
         List<Member> members = strings.stream()
                 .map(Member::new)

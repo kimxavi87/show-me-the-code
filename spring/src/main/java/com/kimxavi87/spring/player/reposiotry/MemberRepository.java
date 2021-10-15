@@ -16,6 +16,7 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
     List<Member> findAllByNameIn(Set<String> names);
 
     void deleteByNameIn(List<String> names);
+    void deleteAllByNameIn(List<String> names);
 
     @Query("DELETE FROM Member m WHERE m.name in :names")
     void deleteByNameInWithQueryAnnotation(List<String> names);
