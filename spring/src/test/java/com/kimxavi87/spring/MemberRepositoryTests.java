@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,11 +34,7 @@ public class MemberRepositoryTests {
 
     @Test
     public void findByPaging() {
-        List<Member> members = Stream.of("Park-ji-sung", "Son-heung-min", "An-jung-hwan", "xavi", "iniesta")
-                .map(Member::new)
-                .collect(Collectors.toList());
-
-        memberRepository.saveAll(members);
+        createFromStringSets(Set.of("Park-ji-sung", "Son-heung-min", "An-jung-hwan", "xavi", "iniesta"));
 
         List<Member> all = memberRepository.findAll(PageRequest.of(0, 2));
         System.out.println(all.size());
@@ -50,6 +45,18 @@ public class MemberRepositoryTests {
 
     @Test
     public void canSelectWithSet() {
-        List<Member> allByNameIn = memberRepository.findAllByNameIn(Set.of("park", "lee"));
+        createFromStringSets(Set.of("Park-ji-sung", "Son-heung-min", "An-jung-hwan", "xavi", "iniesta"));
+
+        List<Member> allByNameIn = memberRepository.findAllByNameIn(Set.of("xavi", "iniesta"));
+        System.out.println(allByNameIn.size());
+    }
+
+    private List<Member> createFromStringSets(Set<String> strings) {
+        List<Member> members = strings.stream()
+                .map(Member::new)
+                .collect(Collectors.toList());
+
+        memberRepository.saveAll(members);
+        return members;
     }
 }

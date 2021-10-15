@@ -9,5 +9,6 @@ import java.util.Set;
 
 public interface MemberRepository extends CrudRepository<Member, Long> {
     List<Member> findAll(Pageable pageable);
+    // name이 아니라 names 로 파라미터 해도 되는가?
     List<Member> findAllByNameIn(Set<String> names);
 }
