@@ -11,13 +11,4 @@ public class ReactiveStreams {
     public static void main(String[] args) {
         SpringApplication.run(ReactiveStreams.class, args);
     }
-
-//    @Bean
-//    public ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
-//        ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
-//        initializer.setConnectionFactory(connectionFactory);
-//        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
-//
-//        return initializer;
-//    }
 }
