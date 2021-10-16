@@ -18,8 +18,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @SpringBootTest
 @Transactional
 public class PlayerRepositoryTests {
@@ -81,6 +79,31 @@ public class PlayerRepositoryTests {
                 System.out.println(team.getName() + " : " + member.getName());
             }
         }
+    }
+
+    @Test
+    public void noChangeTeamAndGettingMembers() {
+        Team team = new Team("liverpool");
+        teamRepository.save(team);
+
+        Member park = Member.builder()
+                .name("park-ji-sung")
+                .team(team)
+                .build();
+
+        memberRepository.save(park);
+
+        teamRepository.findByName("liverpool", PageRequest.of(0, 1));
+
+        // 영속성 컨텍스트 초기화 해도 호출이 안 됨
+        // proxy entity 로 생성이 되지 않기 때문에, getter에 의해 lazy loading 같은 호출이 되지 않는 것 같다
+        em.clear();
+        em.flush();
+
+        List<Member> members = team.getMembers();
+
+        members.stream()
+                .forEach(m -> System.out.println(m.getName()));
     }
 
     private void createManyTeamsAndMembers() {
