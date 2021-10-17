@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,22 +89,35 @@ public class PlayerRepositoryTests {
 
         Member park = Member.builder()
                 .name("park-ji-sung")
-                .team(team)
+//                .team(team)
                 .build();
+
+        // 아래 연관관계 메소드처럼 team 쪽 member 리스트에 제대로 추가해주지 않으면 안 된다
+        park.changeTeam(team);
 
         memberRepository.save(park);
 
-        teamRepository.findByName("liverpool", PageRequest.of(0, 1));
 
         // 영속성 컨텍스트 초기화 해도 호출이 안 됨
         // proxy entity 로 생성이 되지 않기 때문에, getter에 의해 lazy loading 같은 호출이 되지 않는 것 같다
-        em.clear();
-        em.flush();
-
         List<Member> members = team.getMembers();
+        System.out.println("------- 1 -------");
 
         members.stream()
                 .forEach(m -> System.out.println(m.getName()));
+
+        System.out.println("------- 2 -------");
+
+        List<Team> teamByNames = teamRepository.findByName("liverpool", PageRequest.of(0, 1));
+        System.out.println("SIZE : " + teamByNames.size() + " , " + teamByNames.get(0).getMembers().size());
+        teamByNames
+                .forEach(t -> team.getMembers()
+                        .forEach(m -> System.out.println(m.getName())));
+
+        System.out.println("------- 3 -------");
+
+        List<Member> allByNameIn = memberRepository.findAllByNameIn(Set.of("park-ji-sung"));
+        allByNameIn.stream().forEach(mm -> System.out.println(mm.getName() + " : " + mm.getTeam().getName()));
     }
 
     private void createManyTeamsAndMembers() {
