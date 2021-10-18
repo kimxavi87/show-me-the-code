@@ -1,7 +1,8 @@
 package com.kimxavi87.reactivestreams;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.assertj.core.api.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class JustStreamTests {
                 .map(i -> i * 2)
                 .collect(Collectors.toList());
 
-        Assert.assertEquals(0, collect.size());
+        Assertions.assertEquals(0, collect.size());
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.kimxavi87.reactivestreams;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Map;
