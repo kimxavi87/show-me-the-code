@@ -17,6 +17,8 @@ public class CreationTimestampLongTypeGeneration implements AnnotationValueGener
 
     @Override
     public GenerationTiming getGenerationTiming() {
+        // INSERT : insert
+        // ALWAYS : insert , update
         return GenerationTiming.INSERT;
     }
 
