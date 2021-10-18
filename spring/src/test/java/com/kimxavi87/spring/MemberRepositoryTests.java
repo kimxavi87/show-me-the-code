@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -22,12 +26,18 @@ public class MemberRepositoryTests {
     @Autowired
     MemberRepository memberRepository;
 
+    @PersistenceContext
+    EntityManager em;
+
     @Test
     public void saveMember() {
         Member member = new Member("Park-ji-sung");
         memberRepository.save(member);
 
         Optional<Member> byId = memberRepository.findById(member.getId());
+
+        // for logging query
+        memberRepository.findAll();
 
         // 영속성 컨텍스트 내에서 equals 성립
         assertEquals(member, byId.get());
@@ -122,6 +132,37 @@ public class MemberRepositoryTests {
 
         memberRepository.findAll();
 
+    }
+
+    @Test
+    public void customValueGeneratorWithoutFlush() {
+        Member member = new Member("Park-ji-sung");
+        memberRepository.save(member);
+
+        System.out.println("create time : " + member.getCreateTime());
+        Member createdMember = memberRepository.findById(member.getId()).get();
+
+        System.out.println(createdMember.getCreateTime());
+
+        // 영속성 컨텍스트 flush 해주지 않으면 timestamp 값이 채워지지가 않음
+        // query 가 안 날라가서 그런 것 같음
+        assertEquals(0, createdMember.getCreateTime());
+        assertNull(createdMember.getInstant());
+    }
+
+    @Test
+    public void customValueGenerator() {
+        Member member = new Member("Park-ji-sung");
+        memberRepository.save(member);
+
+        em.flush();
+        em.clear();
+
+        System.out.println("create time : " + member.getCreateTime());
+        Member createdMember = memberRepository.findById(member.getId()).get();
+
+        System.out.println(createdMember.getCreateTime());
+        assertTrue(createdMember.getCreateTime() > 0 );
     }
 
     private List<Member> createFromStringSets(Set<String> strings) {
