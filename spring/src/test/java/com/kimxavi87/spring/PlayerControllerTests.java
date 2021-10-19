@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,16 +36,17 @@ public class PlayerControllerTests {
     }
 
     @Test
-    public void whenCreateMember_givenWrongMember_thenFailed() throws Exception {
+    public void whenCreateMember_givenWrongAgeMember_thenFailed() throws Exception {
         MemberInput memberInput = MemberInput.builder()
                 .name("park-ji-sung")
                 .age(40)
                 .build();
 
+        System.out.println(memberInput.getAge());
         mvc.perform(post("/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectMapperUtil.objectToJsonString(memberInput).get()))
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 }
