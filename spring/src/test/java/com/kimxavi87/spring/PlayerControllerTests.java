@@ -12,7 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,5 +50,15 @@ public class PlayerControllerTests {
                 .content(ObjectMapperUtil.objectToJsonString(memberInput).get()))
                 .andExpect(status().isBadRequest())
                 .andReturn();
+    }
+
+    @Test
+    public void whenGetMemberById_givenSmallerThanMinId_thenBadRequest() throws Exception {
+        // JUnit5 : 예외 발생 테스트
+        assertThrows(NestedServletException.class, () -> {
+            mvc.perform(get("/member/4"))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+        });
     }
 }
