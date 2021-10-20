@@ -55,10 +55,10 @@ public class PlayerControllerTests {
     @Test
     public void whenGetMemberById_givenSmallerThanMinId_thenBadRequest() throws Exception {
         // JUnit5 : 예외 발생 테스트
-        assertThrows(NestedServletException.class, () -> {
-            mvc.perform(get("/member/4"))
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-        });
+//        assertThrows(NestedServletException.class, () -> {
+        mvc.perform(get("/member/4"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+//        });
     }
 }
