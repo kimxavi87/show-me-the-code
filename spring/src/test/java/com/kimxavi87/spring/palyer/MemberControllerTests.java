@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,11 +44,13 @@ public class MemberControllerTests {
                 .build();
 
         System.out.println(memberInput.getAge());
-        mvc.perform(post("/member")
+        MvcResult mvcResult = mvc.perform(post("/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectMapperUtil.objectToJsonString(memberInput).get()))
                 .andExpect(status().isBadRequest())
                 .andReturn();
+        
+        System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
     @Test
