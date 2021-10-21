@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,18 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class TeamController {
-    private final Validator teamValidator;
+    private final TeamInputValidator teamInputValidator;
 
     @PostMapping("/team")
     public ResponseEntity createTeam(@RequestBody TeamInput teamInput, BindingResult bindingResult) {
-        teamValidator.validate(teamInput, bindingResult);
-
+        teamInputValidator.validate(teamInput, bindingResult);
         if (bindingResult.hasErrors()) {
             log.info("team error : {}", teamInput);
             return ResponseEntity.badRequest().build();
         }
 
-        log.info("team success : {}", teamInput);
+        log.info("team success : {}, {}", teamInput, bindingResult.toString());
         return ResponseEntity.ok().build();
     }
 }
