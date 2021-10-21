@@ -20,7 +20,11 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.data:spring-data-r2dbc'
+    implementation 'io.projectreactor:reactor-core'
+    implementation 'io.projectreactor.kafka:reactor-kafka'
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'io.r2dbc:r2dbc-h2'
 
@@ -29,7 +33,9 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test:'
     testImplementation 'io.projectreactor:reactor-test'
 }
 
