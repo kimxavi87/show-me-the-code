@@ -37,7 +37,7 @@ public class MemberControllerTests {
     }
 
     @Test
-    public void whenCreateMember_givenWrongAgeMember_thenFailed() throws Exception {
+    public void givenWrongAgeMember_whenCreateMember_thenFailed() throws Exception {
         MemberInput memberInput = MemberInput.builder()
                 .name("park-ji-sung")
                 .age(40)
@@ -54,7 +54,7 @@ public class MemberControllerTests {
     }
 
     @Test
-    public void whenGetMemberById_givenSmallerThanMinId_thenBadRequest() throws Exception {
+    public void givenSmallerThanMinId_whenGetMemberById_thenBadRequest() throws Exception {
         mvc.perform(get("/member/4"))
                 .andExpect(status().isBadRequest())
                 .andReturn();
