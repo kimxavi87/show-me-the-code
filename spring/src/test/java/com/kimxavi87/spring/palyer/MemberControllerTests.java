@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = MemberController.class)
-public class PlayerControllerTests {
+public class MemberControllerTests {
 
     @Autowired
     private MockMvc mvc;
