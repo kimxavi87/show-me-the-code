@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Validated
-public class PlayerController {
+public class MemberController {
 
     private final MemberRepository memberRepository;
 

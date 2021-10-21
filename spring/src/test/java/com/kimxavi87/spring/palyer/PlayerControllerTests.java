@@ -1,6 +1,6 @@
 package com.kimxavi87.spring.palyer;
 
-import com.kimxavi87.spring.player.PlayerController;
+import com.kimxavi87.spring.player.MemberController;
 import com.kimxavi87.spring.player.dto.MemberInput;
 import com.kimxavi87.spring.player.reposiotry.MemberRepository;
 import com.kimxavi87.spring.utils.ObjectMapperUtil;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = PlayerController.class)
+@WebMvcTest(controllers = MemberController.class)
 public class PlayerControllerTests {
 
     @Autowired
