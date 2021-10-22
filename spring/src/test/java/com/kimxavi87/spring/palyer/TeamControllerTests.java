@@ -1,5 +1,6 @@
 package com.kimxavi87.spring.palyer;
 
+import com.kimxavi87.spring.player.dto.MemberInput;
 import com.kimxavi87.spring.player.dto.TeamInput;
 import com.kimxavi87.spring.utils.ObjectMapperUtil;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,7 +27,8 @@ public class TeamControllerTests {
 
     @Test
     public void givenValidatorHasError_whenCreateTeam_thenResponse400() throws Exception {
-        TeamInput input = new TeamInput("", 1000);
+        List<MemberInput> members = Arrays.asList(new MemberInput("park-ji-sung", 25), new MemberInput("son", 50));
+        TeamInput input = new TeamInput("", 1000, members);
         mvc.perform(post("/team").contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectMapperUtil.objectToJsonString(input).get()))
                 .andExpect(status().isBadRequest())
