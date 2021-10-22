@@ -1,7 +1,6 @@
 package com.kimxavi87.reactivestreams;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,7 +73,7 @@ public class EmbeddedKafkaTests {
     }
 
     @Test
-    public void test() {
+    public void givenStringValue_whenSendRecord_thenReceiveRecord() {
         Mono<SenderResult<Void>> senderResultMono =
                 this.kafkaProducer.send(TOPIC, DEFAULT_VALUE);
 
