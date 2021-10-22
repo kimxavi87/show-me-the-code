@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor
 @Component
 public class TeamInputValidator implements Validator {
-    private final MemberInputValidator memberInputValidator;
+    private final Validator memberInputValidator;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -22,7 +22,6 @@ public class TeamInputValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        log.info("------------------------------------ validate check");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "teamName", "teamName.empty");
         TeamInput teamInput = (TeamInput) target;
 
@@ -35,8 +34,15 @@ public class TeamInputValidator implements Validator {
         } else if (teamInput.getMembers().size() <= 0) {
             errors.rejectValue("members", "members size 0");
         } else {
-            for (MemberInput memberInput : teamInput.getMembers()) {
-                ValidationUtils.invokeValidator(memberInputValidator, memberInput, errors);
+            for (int i = 0; i < teamInput.getMembers().size(); i++) {
+                MemberInput memberInput = teamInput.getMembers().get(i);
+                try {
+                    // map['key']
+                    errors.pushNestedPath("members[" + i + "]");
+                    ValidationUtils.invokeValidator(memberInputValidator, memberInput, errors);
+                } finally {
+                    errors.popNestedPath();
+                }
             }
         }
     }

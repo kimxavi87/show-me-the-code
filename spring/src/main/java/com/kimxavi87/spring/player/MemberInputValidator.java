@@ -3,6 +3,7 @@ package com.kimxavi87.spring.player;
 import com.kimxavi87.spring.player.dto.MemberInput;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 @Component
@@ -21,6 +22,7 @@ public class MemberInputValidator implements Validator {
         System.out.println("MemberInput Validation check : age :" + memberInput.getAge());
 
         // 다른곳에서 invokeValidator를 쓴 경우 nested value 로 validationUtils 쓰면 안 된다
-        // ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "name is empty");
+        // (해결) => nestedPath 사용하면 됨
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "name is empty");
     }
 }

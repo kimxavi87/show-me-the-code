@@ -37,6 +37,9 @@ public class SubnetUtilsTests {
 
         String cidr5 = "1.1.1.1/33";
         assertFalse(isValidCidr(cidr5));
+
+        String cidr6 = "1.1.1/33";
+        assertFalse(isValidCidr(cidr6));
     }
 
     private boolean isValidCidr(String cidr) {
@@ -57,6 +60,8 @@ public class SubnetUtilsTests {
             if (Integer.parseInt(matcher.group(5)) <= 0 || Integer.parseInt(matcher.group(5)) > 32) {
                 return false;
             }
+        } else {
+            return false;
         }
 
         return true;
