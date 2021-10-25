@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MatcherTests {
     // https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
+    // Pattern.compile 은 생성비용이 비싸다
     public static final Pattern PATTERN_INTEGER_OR_ALPHABET = Pattern.compile("[0-9|a-z|A-Z]*");
 
     @Test

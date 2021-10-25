@@ -27,7 +27,7 @@ public class TeamControllerTests {
 
     @Test
     public void givenValidatorHasError_whenCreateTeam_thenResponse400() throws Exception {
-        List<MemberInput> members = Arrays.asList(new MemberInput("park-ji-sung", 25), new MemberInput("son", 50));
+        List<MemberInput> members = Arrays.asList(new MemberInput("park-ji-sung", 25, "010-9099-9999"), new MemberInput("son", 50, "010-9999-09999"));
         TeamInput input = new TeamInput("", 1000, members);
         mvc.perform(post("/team").contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectMapperUtil.objectToJsonString(input).get()))

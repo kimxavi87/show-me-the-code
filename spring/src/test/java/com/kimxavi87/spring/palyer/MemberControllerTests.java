@@ -37,10 +37,28 @@ public class MemberControllerTests {
     }
 
     @Test
+    public void givenMemberInput_whenCreateMember_thenSuccess() throws Exception {
+        MemberInput memberInput = MemberInput.builder()
+                .name("park-ji-sung")
+                .age(20)
+                .mobilePhoneNumber("010-9999-9999")
+                .build();
+
+        MvcResult mvcResult = mvc.perform(post("/member")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectMapperUtil.objectToJsonString(memberInput).get()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
     public void givenWrongAgeMember_whenCreateMember_thenFailed() throws Exception {
         MemberInput memberInput = MemberInput.builder()
                 .name("park-ji-sung")
                 .age(40)
+                .mobilePhoneNumber("010-9999-9999")
                 .build();
 
         System.out.println(memberInput.getAge());

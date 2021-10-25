@@ -21,7 +21,7 @@ public class PlayerServiceTests {
         // JUnit5 : 예외 발생 테스트
         // Service Layer, Parameter Valid 테스트
         assertThrows(ConstraintViolationException.class, () -> {
-            service.dummy(new MemberInput("park-ji-sung", 35));
+            service.dummy(new MemberInput("park-ji-sung", 35, "010-9999-9999"));
         });
     }
 }
