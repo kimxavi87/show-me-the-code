@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TeamInputValidatorTests {
 
     @Test
-    public void givenCorrectTeamInput_whenCheckValidate_thenIsValid() {
+    public void givenCorrectTeamInput_whenValidate_thenIsValid() {
         List<MemberInput> memberInputs = Arrays.asList(new MemberInput("dwpark", 55, "010-9999-0000"), new MemberInput("kim", 22, "010-0000-8888"));
         TeamInput teamInput = new TeamInput("liverpool", 5000, memberInputs);
 

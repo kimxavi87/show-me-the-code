@@ -62,6 +62,8 @@ public class MemberControllerTests {
                 .build();
 
         System.out.println(memberInput.getAge());
+        // 블로그랑 다르게, ConstraintViolationException 가 아니라 MethodArgumentNotValidException 가 발생
+        // 상속 받은 부모 클래스에서 핸들링 하고 있음
         MvcResult mvcResult = mvc.perform(post("/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectMapperUtil.objectToJsonString(memberInput).get()))
