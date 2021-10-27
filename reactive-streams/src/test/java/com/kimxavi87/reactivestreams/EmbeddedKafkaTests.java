@@ -1,17 +1,21 @@
 package com.kimxavi87.reactivestreams;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.kafka.support.converter.MessagingMessageConverter;
 import org.springframework.kafka.test.condition.EmbeddedKafkaCondition;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.kafka.receiver.ReceiverOptions;
 import reactor.kafka.sender.SenderOptions;
@@ -28,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         brokerProperties = { "transaction.state.log.replication.factor=1", "transaction.state.log.min.isr=1" })
 public class EmbeddedKafkaTests {
     public static final String TOPIC = "test-topic";
-    private static final int DEFAULT_PARTITION = 1;
     private static final String CONSUMER_GROUP_ID = "test-consumer-group";
     private static final Duration DEFAULT_VERIFY_TIMEOUT = Duration.ofSeconds(10);
     private static final String DEFAULT_VALUE = "test-value";
@@ -38,10 +41,14 @@ public class EmbeddedKafkaTests {
 
     @BeforeAll
     public static void setUpBeforeClass() {
+
         Map<String, Object> consumerProps =
                 KafkaTestUtils.consumerProps(CONSUMER_GROUP_ID, "false", EmbeddedKafkaCondition.getBroker());
         kafkaConsumer =
                 new ReactiveKafkaConsumerTemplate<>(setupReceiverOptionsWithDefaultTopic(consumerProps));
+
+//        Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+//        logger.setLevel(Level.OFF);
     }
 
     @BeforeEach
@@ -94,5 +101,24 @@ public class EmbeddedKafkaTests {
                 .assertNext(receiverRecord -> assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE))
                 .thenCancel()
                 .verify(DEFAULT_VERIFY_TIMEOUT);
+    }
+
+    @Test
+    public void givenStringValue_whenHappenException_thenKeepReceive() throws InterruptedException {
+        Flux.interval(Duration.ofSeconds(1))
+                .flatMap(l -> this.kafkaProducer.send(TOPIC, DEFAULT_VALUE))
+                .doOnNext(voidSenderResult -> System.out.println(voidSenderResult.recordMetadata().topic()))
+                .subscribe();
+
+        kafkaConsumer.receiveAutoAck()
+                .doOnNext(consumerRecord -> System.out.println(consumerRecord.toString()))
+                .map(consumerRecord -> {
+                    throw new RuntimeException("Hello World!");
+                })
+                .doOnCancel(() -> System.out.println("cancel"))
+                .doOnComplete(() -> System.out.println("complete"))
+                .subscribe();
+
+        Thread.sleep(30 * 1000);
     }
 }
