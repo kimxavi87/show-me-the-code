@@ -110,14 +110,37 @@ public class EmbeddedKafkaTests {
                 .doOnNext(voidSenderResult -> System.out.println(voidSenderResult.recordMetadata().topic()))
                 .subscribe();
 
-        kafkaConsumer.receiveAutoAck()
+        // map 안에서 exception 던지면
+        // cancel 이나 complete 가 발생하지 않고
+        // consume도 더 하지 않는다 (문제 상황 확인 완료)
+        // catch 하면 계속 진행됨
+        kafkaConsumer.receive()
                 .doOnNext(consumerRecord -> System.out.println(consumerRecord.toString()))
-                .map(consumerRecord -> {
-                    throw new RuntimeException("Hello World!");
+                .map(rr -> {
+                    try {
+                        throw new RuntimeException("Hello World!");
+                    } finally {
+                        System.out.println("Hello Finally");
+                        rr.receiverOffset().acknowledge();
+                    }
                 })
-                .doOnCancel(() -> System.out.println("cancel"))
-                .doOnComplete(() -> System.out.println("complete"))
                 .subscribe();
+//        kafkaConsumer.receiveAutoAck()
+//                .doOnNext(consumerRecord -> System.out.println(consumerRecord.toString()))
+////                .map(consumerRecord -> {
+////                    try {
+////                        throw new RuntimeException("Hello World!");
+////                    } catch (Exception e) {
+////                        System.out.println(e.getCause());
+////                    }
+////                    return "";
+////                })
+//                .map(consumerRecord -> {
+//                    throw new RuntimeException("Hello Error!");
+//                })
+//                .doOnCancel(() -> System.out.println("cancel"))
+//                .doOnComplete(() -> System.out.println("complete"))
+//                .subscribe();
 
         Thread.sleep(30 * 1000);
     }
