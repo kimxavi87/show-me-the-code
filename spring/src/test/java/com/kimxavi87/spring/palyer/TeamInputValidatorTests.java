@@ -7,9 +7,11 @@ import com.kimxavi87.spring.player.dto.TeamInput;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,5 +30,21 @@ public class TeamInputValidatorTests {
 
         teamInputValidator.validate(teamInput, errors);
         assertThat(errors.hasErrors()).isEqualTo(false);
+    }
+
+    @Test
+    public void givenWrongTeamValue_whenValidate_thenGetCorrectErrorMessage() {
+        TeamInput teamInput = new TeamInput("liverpool", 500, Collections.emptyList());
+
+        Validator memberInputValidator = new MemberInputValidator();
+        Validator teamInputValidator = new TeamInputValidator(memberInputValidator);
+
+        Errors errors = new BeanPropertyBindingResult(teamInput, "teamInput");
+
+        teamInputValidator.validate(teamInput, errors);
+
+        for (ObjectError allError : errors.getAllErrors()) {
+            System.out.println(allError.toString());
+        }
     }
 }
