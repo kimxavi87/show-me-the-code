@@ -9,7 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+        SpringApplication springApplication = new SpringApplication(Application.class);
+        springApplication.run(args);
 
+        System.out.println(springApplication.getWebApplicationType());
+        // batch 는 WebApplicationType.None
+        // application 실행 바로 끝남
+    }
 }
