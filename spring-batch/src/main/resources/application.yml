@@ -1,4 +1,7 @@
 spring:
+  batch:
+    job:
+      enabled: false
   datasource:
     url: jdbc:h2:mem:test
     username: sa
