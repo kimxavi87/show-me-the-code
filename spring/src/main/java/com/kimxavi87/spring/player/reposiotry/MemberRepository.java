@@ -24,4 +24,6 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
     @Modifying
     @Query("DELETE FROM Member m WHERE m.name in :names")
     void deleteByNameInWithQueryAndModifyingAnnotation(List<String> names);
+
+    boolean existsByName(String name);
 }

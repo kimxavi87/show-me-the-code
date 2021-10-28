@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -163,6 +164,15 @@ public class MemberRepositoryTests {
 
         System.out.println(createdMember.getCreateTime());
         assertTrue(createdMember.getCreateTime() > 0 );
+    }
+
+    @Test
+    public void existsByName() {
+        Member member = new Member("Park-ji-sung");
+        memberRepository.save(member);
+
+        // select member0_.id as col_0_0_ from member member0_ where member0_.name=? limit 1
+        assertThat(memberRepository.existsByName("Park-ji-sung")).isEqualTo(true);
     }
 
     private List<Member> createFromStringSets(Set<String> strings) {
