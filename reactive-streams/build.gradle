@@ -25,6 +25,10 @@ dependencies {
     implementation 'io.projectreactor:reactor-core'
     implementation 'io.projectreactor.kafka:reactor-kafka'
 
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'io.r2dbc:r2dbc-h2'
 
@@ -37,6 +41,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test:'
     testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 }
 
 test {
