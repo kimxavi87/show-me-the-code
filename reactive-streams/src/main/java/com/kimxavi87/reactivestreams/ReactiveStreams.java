@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @SpringBootApplication
@@ -15,6 +16,12 @@ public class ReactiveStreams {
 
     public static void main(String[] args) {
         SpringApplication.run(ReactiveStreams.class, args);
+    }
+
+    @Bean
+    public Flux<Integer> testFlux() {
+        return Flux.just(1, 2, 3, 4)
+                .doOnNext(i -> System.out.println("testFlux : " + i));
     }
 
     @Bean
