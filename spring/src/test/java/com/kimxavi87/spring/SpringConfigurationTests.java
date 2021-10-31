@@ -24,7 +24,9 @@ public class SpringConfigurationTests {
 
     @Test
     public void proxyBeanMethodsFalse() {
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(ProxyBeanMethodsFalseConfiguration.class);
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+        applicationContext.register(ProxyBeanMethodsFalseConfiguration.class);
+        applicationContext.refresh();
 
         ProxyBeanMethodsFalseConfiguration bean = applicationContext.getBean(ProxyBeanMethodsFalseConfiguration.class);
         // configuration bean 가져와도 객체 그 자체가 저장됨
