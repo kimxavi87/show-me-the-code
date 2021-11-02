@@ -42,6 +42,8 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test:'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
+    testImplementation("com.squareup.okhttp3:mockwebserver")
 }
 
 test {
