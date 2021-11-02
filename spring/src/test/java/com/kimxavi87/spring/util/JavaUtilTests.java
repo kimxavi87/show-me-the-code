@@ -1,4 +1,4 @@
-package com.kimxavi87.spring;
+package com.kimxavi87.spring.util;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package com.kimxavi87.spring;
+package com.kimxavi87.spring.util;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,5 +15,6 @@ public class CollectionsTests {
         // 처음에는 null 로 있다가 put 메서드가 호출되면
         // resize() 호출해서 할당
         HashMap<Object, Object> hashMap = new HashMap<>();
+        hashMap.put("key", "value");
     }
 }
