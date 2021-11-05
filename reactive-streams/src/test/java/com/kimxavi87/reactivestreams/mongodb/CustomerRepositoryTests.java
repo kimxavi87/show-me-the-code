@@ -33,8 +33,10 @@ public class CustomerRepositoryTests {
 
     @Test
     public void givenCustomer_whenReactiveSaveAndFindByName_thenSuccess() {
-        Customer park = reactiveRepository.save(new Customer(null, "park", 19990909)).block();
-        StepVerifier.create(reactiveRepository.findByName("park"))
+        // 테스트 동시에 할 때, 데이터가 초기화되는 것은 아니니 조심할 것
+        // Equals 를 구현을 안해주면 아래에 isEqualTo 가 같게 나오지 않는다
+        Customer park = reactiveRepository.save(new Customer(null, "kim", 19990909)).block();
+        StepVerifier.create(reactiveRepository.findByName("kim"))
                 .assertNext(customer -> {
                     System.out.println(customer.getId());
                     assertThat(customer).isEqualTo(park);
