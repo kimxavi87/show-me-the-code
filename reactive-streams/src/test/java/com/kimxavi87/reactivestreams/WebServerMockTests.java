@@ -14,6 +14,8 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 // package org.springframework.web.reactive.function.client.WebClientIntegrationTests 참고함
 public class WebServerMockTests {
     private MockWebServer server;
@@ -48,6 +50,24 @@ public class WebServerMockTests {
                 .expectNext("Ok")
                 .expectComplete()
                 .verify(Duration.ofSeconds(4L));
+    }
+
+    @Test
+    public void whenPostMethod_thenResponse200Ok() throws InterruptedException {
+        String body = "Hello World!";
+
+        prepareResponse(mockResponse -> mockResponse
+                .setBodyDelay(2L, TimeUnit.SECONDS)
+                .setBody("Ok"));
+
+        webClient.post()
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        assertThat(this.server.takeRequest().getBody().toString().contains(body))
+                .isEqualTo(true);
     }
 
     private void prepareResponse(Consumer<MockResponse> consumer) {
