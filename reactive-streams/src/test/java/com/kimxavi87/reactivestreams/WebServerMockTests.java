@@ -2,6 +2,7 @@ package com.kimxavi87.reactivestreams;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 // package org.springframework.web.reactive.function.client.WebClientIntegrationTests 참고함
+// https://github.com/spring-projects/spring-framework/blob/main/spring-webflux/src/test/java/org/springframework/web/reactive/function/client/WebClientIntegrationTests.java
 public class WebServerMockTests {
     private MockWebServer server;
     private WebClient webClient;
@@ -70,9 +72,45 @@ public class WebServerMockTests {
                 .isEqualTo(true);
     }
 
+    @Test
+    public void whenBuildWithUriBuilder_thenRequest() {
+        int firstPathVar = 2;
+        String secondPathVar = "VIP";
+
+        prepareResponse(mockResponse -> mockResponse
+                .setBody("Ok"));
+
+        webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/customer/{id}/type/{type}")
+                        .build(firstPathVar, secondPathVar))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        expectRequest(recordedRequest -> {
+            assertThat(recordedRequest.getRequestUrl().toString().contains(String.valueOf(firstPathVar)))
+                    .isEqualTo(true);
+            assertThat(recordedRequest.getRequestUrl().toString().contains(secondPathVar))
+                    .isEqualTo(true);
+        });
+
+        // takeRequest 는 요청이 오는걸 기다린다. 즉 response 1개 넣으면 request도 한 개
+        // takeRequest 를 2번 호출하면 한번은 기다림
+    }
+
     private void prepareResponse(Consumer<MockResponse> consumer) {
         MockResponse response = new MockResponse();
         consumer.accept(response);
         this.server.enqueue(response);
+    }
+
+    private void expectRequest(Consumer<RecordedRequest> consumer) {
+        try {
+            consumer.accept(this.server.takeRequest());
+        }
+        catch (InterruptedException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 }
