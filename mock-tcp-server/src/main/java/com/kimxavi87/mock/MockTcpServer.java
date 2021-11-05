@@ -32,6 +32,11 @@ public class MockTcpServer implements Closeable {
                 readResult.get();
 
                 buffer.flip();
+                String message = new String(buffer.array()).trim();
+                if (message.equals("bye")) {
+                    break; // while loop
+                }
+                buffer = ByteBuffer.wrap(message.getBytes());
                 Future<Integer> writeResult = clientChannel.write(buffer);
 
                 // perform other computations
