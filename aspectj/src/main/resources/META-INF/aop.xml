@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!--
+	AspectJ load-time weaving config file to install common Spring aspects.
+-->
+<aspectj>
+
+    <weaver options="-showWeaveInfo"/>
+    <aspects>
+        <aspect name="com.kimxavi87.aspectj.aspect.HelloAspect"/>
+    </aspects>
+
+</aspectj>
