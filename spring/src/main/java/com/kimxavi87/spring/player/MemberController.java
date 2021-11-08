@@ -1,5 +1,6 @@
 package com.kimxavi87.spring.player;
 
+import com.kimxavi87.spring.conf.validator.PageableValid;
 import com.kimxavi87.spring.player.dto.MemberInput;
 import com.kimxavi87.spring.player.entity.Member;
 import com.kimxavi87.spring.player.reposiotry.MemberRepository;
@@ -40,6 +41,11 @@ public class MemberController {
 
     @GetMapping("/members")
     public List<Member> requestMembers(@PageableDefault(size = 10) Pageable pageable) {
+        return memberRepository.findAll(pageable);
+    }
+
+    @GetMapping("/membersWithPageValid")
+    public List<Member> requestMembersWithPageValid(@PageableValid @PageableDefault(size = 10) Pageable pageable) {
         return memberRepository.findAll(pageable);
     }
 

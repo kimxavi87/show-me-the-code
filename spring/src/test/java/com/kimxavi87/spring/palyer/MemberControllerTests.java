@@ -79,4 +79,18 @@ public class MemberControllerTests {
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
+
+    @Test
+    public void givenWrongPageSize_whenRequestMemberList_thenOk() throws Exception {
+        mvc.perform(get("/members?size=101"))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    public void givenWrongPageSize_whenRequestMemberList_thenBadRequest() throws Exception {
+        mvc.perform(get("/membersWithPageValid?size=101"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
 }
