@@ -6,6 +6,9 @@ import com.kimxavi87.reactivestreams.Customer.CustomerReactiveRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
@@ -18,6 +21,8 @@ public class CustomerRepositoryTests {
     private CustomerCrudRepository crudRepository;
     @Autowired
     private CustomerReactiveRepository reactiveRepository;
+    @Autowired
+    private ReactiveMongoTemplate mongoTemplate;
 
     @Test
     public void givenCustomer_whenSaveAndFindByName_thenSuccess() {
@@ -40,6 +45,23 @@ public class CustomerRepositoryTests {
                 .assertNext(customer -> {
                     System.out.println(customer.getId());
                     assertThat(customer).isEqualTo(park);
+                })
+                .expectComplete()
+                .verify(Duration.ofSeconds(30));
+    }
+
+    @Test
+    public void givenBasicQueryLt_whenQuery_thenFoundSuccess() {
+        reactiveRepository.save(new Customer(null, "kim", 19990909)).block();
+
+        BasicQuery basicQuery = new BasicQuery("{ birth: { $lt: 20000000 } }");
+
+        Flux<Customer> customerFlux = mongoTemplate.find(basicQuery, Customer.class);
+
+        StepVerifier.create(customerFlux)
+                .assertNext(customer -> {
+                    System.out.println("customer : " + customer);
+                    assertThat(customer.getBirth() < 20000000).isEqualTo(true);
                 })
                 .expectComplete()
                 .verify(Duration.ofSeconds(30));
