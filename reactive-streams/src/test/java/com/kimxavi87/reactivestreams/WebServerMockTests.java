@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 // package org.springframework.web.reactive.function.client.WebClientIntegrationTests 참고함
 // https://github.com/spring-projects/spring-framework/blob/main/spring-webflux/src/test/java/org/springframework/web/reactive/function/client/WebClientIntegrationTests.java
@@ -97,6 +99,31 @@ public class WebServerMockTests {
 
         // takeRequest 는 요청이 오는걸 기다린다. 즉 response 1개 넣으면 request도 한 개
         // takeRequest 를 2번 호출하면 한번은 기다림
+    }
+
+    @Test
+    public void givenMany_whenRequest_thenCheckHowItWorks() throws InterruptedException {
+        // 10 개를 요청해도 nio 쓰레드가 10개로 늘어나진 않음 : 현재 8개로 표시됨
+        // 비동기 8개 미만 :  5초 뒤에 응답 오고 끝남
+        // 동기 10개 : 50초 걸림
+        // 비동기 16개 : thread pool * 2 개수 만큼 요청해도 동일하게 끝남
+
+        Flux<String> ok = Flux.just(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
+                .doOnNext(i -> prepareResponse(mockResponse -> mockResponse
+                        .setBodyDelay(5, TimeUnit.SECONDS)
+                        .setBody("Ok" + i)))
+                .doOnNext(integer -> System.out.println(integer))
+                .flatMap(integer -> {
+                    return webClient.get()
+                            .retrieve()
+                            .bodyToMono(String.class);
+                })
+                .doOnNext(s -> System.out.println(s));
+
+        StepVerifier.create(ok)
+                .expectNextCount(16)
+                .expectComplete()
+                .verify(Duration.ofSeconds(60));
     }
 
     private void prepareResponse(Consumer<MockResponse> consumer) {

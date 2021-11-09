@@ -1,14 +1,11 @@
 package com.kimxavi87.reactivestreams;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.kafka.support.converter.MessagingMessageConverter;
@@ -112,6 +109,7 @@ public class EmbeddedKafkaTests {
 
         // map 안에서 exception 던지면
         // cancel 이나 complete 가 발생하지 않고
+        // error 발생
         // consume도 더 하지 않는다 (문제 상황 확인 완료)
         // catch 하면 계속 진행됨
         kafkaConsumer.receive()
