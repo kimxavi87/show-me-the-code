@@ -58,10 +58,22 @@ public class TcpServerTests {
                 .host("localhost")
                 .port(heartbeatServerPort)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
-                .connect();
+                .doOnConnect(tcpClientConfig -> System.out.println("doOnConnect"))
+                .doOnConnected(connection -> System.out.println("doOnConnected"))
+                .doOnDisconnected(connection -> System.out.println("doOnDisconnected"))
+                .connect()
+                .doOnNext(connection -> System.out.println("doOnNext"));
+
+        // doOnConnect : connect() 에서 호출
+        // doOnConnected : 연결이 되고 IO handle 할 때
 
         StepVerifier.create(connectionMono)
-                .assertNext(connection -> assertThat(connection.isDisposed()).isEqualTo(true))
+                .assertNext(connection -> {
+                    assertThat(connection.isDisposed())
+                            .isEqualTo(false);
+                    // doOnDisconnected : 연결 끊을 때
+                    connection.dispose();
+                })
                 .expectComplete()
                 .verify(Duration.ofMinutes(1));
     }
