@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +42,23 @@ public class ObjectMapperUtilTests {
         Optional<String> jsonString = ObjectMapperUtil.objectToJsonString(kim);
         System.out.println(jsonString.get());
         assertThat(jsonString.get()).isEqualTo("{\"name\":\"hhh\",\"age\":10}");
+    }
+
+    @Test
+    public void givenObject_whenConvert_thenReturnMap() {
+        String name = "kim";
+        int age = 30;
+        TestObject kim = new TestObject(name, age);
+        Map<String, Object> result = ObjectMapperUtil.objectToMap(kim);
+        assertThat(result.get("name")).isEqualTo(name);
+        assertThat(result.get("age")).isEqualTo(age);
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class TestObject {
+        private String name;
+        private int age;
     }
 
     @Getter

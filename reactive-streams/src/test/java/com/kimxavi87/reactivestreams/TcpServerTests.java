@@ -99,12 +99,13 @@ public class TcpServerTests {
     public void whenSendStringToOut_thenReceive() {
         // runOn : LoopResources 변경
         // wiretap : Wire Logger
+        // todo : neverComplete() ?
         Mono<? extends Connection> connectionMono = TcpClient.create()
                 .host("localhost")
                 .port(heartbeatServerPort)
                 .wiretap(true)
                 .handle((in, out) -> {
-                    return Flux.merge(out.sendString(Mono.just("Hello World!")),
+                    return Flux.merge(out.sendString(Mono.just("Hello World!")).neverComplete(),
                             in.receive().then());
                 })
                 .connect();

@@ -1,11 +1,13 @@
 package com.kimxavi87.spring.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -20,5 +22,9 @@ public class ObjectMapperUtil {
             log.error("error", e);
             return Optional.empty();
         }
+    }
+
+    public static Map<String, Object> objectToMap(Object object) {
+        return objectMapper.convertValue(object, new TypeReference<Map<String, Object>>() {});
     }
 }
