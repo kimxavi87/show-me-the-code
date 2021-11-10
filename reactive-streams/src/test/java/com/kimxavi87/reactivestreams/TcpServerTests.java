@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.SocketUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.tcp.TcpClient;
@@ -92,6 +93,29 @@ public class TcpServerTests {
                 .expectError()
                 .verify(Duration.ofMinutes(1));
 
+    }
+
+    @Test
+    public void whenSendStringToOut_thenReceive() {
+        // runOn : LoopResources 변경
+        // wiretap : Wire Logger
+        Mono<? extends Connection> connectionMono = TcpClient.create()
+                .host("localhost")
+                .port(heartbeatServerPort)
+                .wiretap(true)
+                .handle((in, out) -> {
+                    return Flux.merge(out.sendString(Mono.just("Hello World!")),
+                            in.receive().then());
+                })
+                .connect();
+
+        StepVerifier.create(connectionMono)
+                .assertNext(connection -> {
+                    assertThat(connection.isDisposed())
+                            .isEqualTo(false);
+                })
+                .expectComplete()
+                .verify(Duration.ofMinutes(1));
     }
 
     private static final class HeartbeatServer extends CountDownLatch implements Runnable {
