@@ -1,11 +1,23 @@
 package com.kimxavi87.reactivestreams;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 
+@Slf4j
 public class FluxTests {
+
+    @Test
+    public void range() {
+        log.info("START");
+        Flux.range(0, 10)
+                .map(i -> i * 2)
+                .doOnNext(integer -> log.info("{}", integer))
+                .subscribe();
+        log.info("END");
+    }
 
     @Test
     public void interval() throws InterruptedException {
