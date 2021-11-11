@@ -14,6 +14,8 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ObjectMapperUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE
+            = new TypeReference<Map<String, Object>>() {};
 
     public static Optional<String> objectToJsonString(Object input) {
         try {
@@ -25,6 +27,8 @@ public class ObjectMapperUtil {
     }
 
     public static Map<String, Object> objectToMap(Object object) {
-        return objectMapper.convertValue(object, new TypeReference<Map<String, Object>>() {});
+        // TypeReference is Thread-Safe
+        // https://groups.google.com/g/jackson-user/c/fB0UhzdSivQ?pli=1
+        return objectMapper.convertValue(object, MAP_TYPE_REFERENCE);
     }
 }
