@@ -6,6 +6,7 @@ import com.kimxavi87.reactivestreams.Customer.CustomerReactiveRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import reactor.core.publisher.Flux;
@@ -62,6 +63,27 @@ public class CustomerRepositoryTests {
                 .assertNext(customer -> {
                     System.out.println("customer : " + customer);
                     assertThat(customer.getBirth() < 20000000).isEqualTo(true);
+                })
+                .expectComplete()
+                .verify(Duration.ofSeconds(30));
+    }
+
+    @Test
+    public void givenCustomerExample_whenFind_thenFound() {
+        reactiveRepository.save(new Customer(null, "kim", 19990909)).block();
+
+        // 전부 일치하게 넣어야지 찾아짐, name만 넣을 경우는 못 찾음
+        // 다른 객체로 만들어서 넣을 순 없다
+        Customer query = new Customer(null, "kim", 19990909);
+        Example<Customer> example = Example.of(query);
+
+        Flux<Customer> fluxFound = reactiveRepository.findAll(example);
+
+        StepVerifier.create(fluxFound)
+                .assertNext(customer -> {
+                    System.out.println("customer : " + customer);
+                    assertThat(customer.getName()).isEqualTo(query.getName());
+                    assertThat(customer.getBirth()).isEqualTo(query.getBirth());
                 })
                 .expectComplete()
                 .verify(Duration.ofSeconds(30));
