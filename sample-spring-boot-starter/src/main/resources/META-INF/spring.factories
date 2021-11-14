@@ -1,0 +1,3 @@
+# auto configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.kimxavi87.starter.SampleAutoConfiguration
