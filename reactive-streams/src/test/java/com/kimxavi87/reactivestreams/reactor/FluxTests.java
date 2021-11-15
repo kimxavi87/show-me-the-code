@@ -1,4 +1,4 @@
-package com.kimxavi87.reactivestreams;
+package com.kimxavi87.reactivestreams.reactor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
