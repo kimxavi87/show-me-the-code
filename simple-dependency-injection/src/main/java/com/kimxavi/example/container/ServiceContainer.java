@@ -5,7 +5,6 @@ import com.kimxavi.example.annotation.KimxaviInject;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 public class ServiceContainer {
 

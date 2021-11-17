@@ -10,8 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Unit test for simple App.
  */
-public class AppTest
-{
+public class AppTest {
     @Test
     public void shouldNotNull() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SoccerService soccerService = ServiceContainer.getObject(SoccerService.class);
