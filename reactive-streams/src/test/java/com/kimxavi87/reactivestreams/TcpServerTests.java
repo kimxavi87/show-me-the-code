@@ -35,6 +35,9 @@ public class TcpServerTests {
     // jupiter @Test 로 등록 안 하니까 실행 안 되는 단순한 이유
     @BeforeEach
     public void setUp() throws IOException, InterruptedException {
+        // findAvailableTcpPort 는 port를 어떻게 찾는 걸까?
+        // random int 값 구한 다음에
+        // 해당 int 값으로 소켓 열어봄, 계속 반복해서 해보고 열리면 닫고 해당 포트를 반환
         heartbeatServerPort = SocketUtils.findAvailableTcpPort();
         heartbeatServer = new HeartbeatServer(heartbeatServerPort);
         heartbeatServerFuture = threadPool.submit(heartbeatServer);
