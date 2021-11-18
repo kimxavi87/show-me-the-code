@@ -55,6 +55,7 @@ public class FluxTests {
         Flux.range(0, 10)
                 // main thread
                 .doOnNext(integer -> log.info("before {}", integer))
+                // newSingle
                 .flatMap(integer ->
                         Mono.fromCallable(() -> {
                             log.info("from callable " + integer);
@@ -66,6 +67,7 @@ public class FluxTests {
                             return "Hello World " + integer;
                         }).publishOn(Schedulers.newSingle("defer"))
                 )
+                // newSingle
                 .doOnNext(s -> log.info(s))
                 .blockLast();
     }
