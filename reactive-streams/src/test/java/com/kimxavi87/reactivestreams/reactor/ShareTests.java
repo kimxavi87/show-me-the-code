@@ -109,4 +109,31 @@ public class ShareTests {
         // 위 main thread로 작동하는 부분을 제거하면 main end로 바로 호출된다
         log.info("main end");
     }
+
+    @Test
+    public void cachedSingle() {
+        Flux<Integer> shareFlux = Flux.range(0, 10).share();
+
+        // single() 호출하면
+        // cache 된 Single 쓰레드 풀이 있는지 확인 후 있으면 반환, 없으면 생성
+        // daemon true
+        // newSingle(String name) 으로 호출하면 daemon false
+
+        // single-1
+        shareFlux
+                .publishOn(Schedulers.single())
+                .map(integer -> integer * 2)
+                .doOnNext(integer -> log.info("multiply2  : {}", integer))
+                .subscribe();
+
+        // single-1
+        shareFlux
+                .publishOn(Schedulers.single())
+                .map(integer -> integer * 2)
+                .map(integer -> integer * 3)
+                .doOnNext(integer -> log.info("multiply3  : {}", integer))
+                .subscribe();
+
+        log.info("main end");
+    }
 }
