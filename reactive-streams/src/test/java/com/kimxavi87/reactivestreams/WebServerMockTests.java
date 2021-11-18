@@ -1,5 +1,6 @@
 package com.kimxavi87.reactivestreams;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // package org.springframework.web.reactive.function.client.WebClientIntegrationTests 참고함
 // https://github.com/spring-projects/spring-framework/blob/main/spring-webflux/src/test/java/org/springframework/web/reactive/function/client/WebClientIntegrationTests.java
+@Slf4j
 public class WebServerMockTests {
     private MockWebServer server;
     private WebClient webClient;
@@ -111,13 +113,15 @@ public class WebServerMockTests {
                 .doOnNext(i -> prepareResponse(mockResponse -> mockResponse
                         .setBodyDelay(5, TimeUnit.SECONDS)
                         .setBody("Ok" + i)))
-                .doOnNext(integer -> System.out.println(integer))
+                .doOnNext(integer -> log.info("log + {}", integer))
                 .flatMap(integer -> {
                     return webClient.get()
                             .retrieve()
                             .bodyToMono(String.class);
                 })
-                .doOnNext(s -> System.out.println(s));
+                .doOnNext(s -> log.info(s));
+        // WebClient 요청 전에는 다 main thread
+        // WebClient 요청 즉 flatMap 끝난 뒤에 doOnNext 도 reactor-http-nio- 쓰레드 풀에서 실행됨
 
         StepVerifier.create(ok)
                 .expectNextCount(16)

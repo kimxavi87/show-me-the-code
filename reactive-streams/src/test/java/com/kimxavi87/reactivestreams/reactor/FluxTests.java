@@ -3,6 +3,8 @@ package com.kimxavi87.reactivestreams.reactor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 
@@ -46,5 +48,25 @@ public class FluxTests {
                         () -> System.out.println("Success"));
 
         Thread.sleep(10 * 1000);
+    }
+
+    @Test
+    public void flatMap() {
+        Flux.range(0, 10)
+                // main thread
+                .doOnNext(integer -> log.info("before {}", integer))
+                .flatMap(integer ->
+                        Mono.fromCallable(() -> {
+                            log.info("from callable " + integer);
+                            try {
+                                Thread.sleep(2000L);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            return "Hello World " + integer;
+                        }).publishOn(Schedulers.newSingle("defer"))
+                )
+                .doOnNext(s -> log.info(s))
+                .blockLast();
     }
 }
