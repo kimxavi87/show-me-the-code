@@ -76,4 +76,37 @@ public class ShareTests {
                 .doOnNext(integer -> log.info("multiply3  : {}", integer))
                 .subscribe();
     }
+
+    @Test
+    public void publishOnInSharedFlux() {
+        Flux<Integer> shareFlux = Flux.range(0, 10).share();
+
+        shareFlux
+                .publishOn(Schedulers.newSingle("multiply2"))
+                .map(integer -> integer * 2)
+                .doOnNext(integer -> log.info("multiply2  : {}", integer))
+                .subscribe();
+
+        shareFlux
+                .publishOn(Schedulers.newSingle("multiply3"))
+                .map(integer -> integer * 2)
+                .map(integer -> integer * 3)
+                .doOnNext(integer -> log.info("multiply3  : {}", integer))
+                .subscribe();
+
+        // main thread
+        shareFlux
+                .doOnNext(integer -> log.info("main : {}", integer))
+                .subscribe();
+
+        // main thread2
+        shareFlux
+                .doOnNext(integer -> log.info("main2 : {}", integer))
+                .subscribe();
+
+        // main -> main2 -> main end
+
+        // 위 main thread로 작동하는 부분을 제거하면 main end로 바로 호출된다
+        log.info("main end");
+    }
 }
