@@ -16,7 +16,12 @@ public class ValueTests {
     public void givenValueInProperties_whenInjectConstructorValue_thenGetValue() {
         // 없는 properties를 @Value로 생성자 주입 받을 경우 IllegalArgumentException 발생
         // Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'no.id' in value "${no.id}"
+
+        // 필드로 주입받은 값을 생성자에서 쓸 수 없음
+        System.out.println(valueInject.getId());
+        System.out.println(valueInject.getMo());
         assertThat(valueInject.getId()).isEqualTo("100");
+        assertThat(valueInject.getMo()).isEqualTo("1001");
     }
 
 }

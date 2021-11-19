@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class ValueInject {
-    private String id;
+
+    private final String id;
+    private final String mo = "1001";
 
     // 필드 @Value injection 도 없으면 에러 발생
 //    @Value("${no.id}")

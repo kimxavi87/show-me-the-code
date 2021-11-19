@@ -25,11 +25,11 @@ public class TomcatGracefulShutdown implements TomcatConnectorCustomizer, Applic
 
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
-        try {
-            Thread.sleep(WAIT_FOR_HEALTH_CKECK_SLEEP);
-        } catch (InterruptedException e) {
-            log.error("error", e);
-        }
+//        try {
+//            Thread.sleep(WAIT_FOR_HEALTH_CKECK_SLEEP);
+//        } catch (InterruptedException e) {
+//            log.error("error", e);
+//        }
 
         if (this.connector != null) {
             this.connector.pause();
