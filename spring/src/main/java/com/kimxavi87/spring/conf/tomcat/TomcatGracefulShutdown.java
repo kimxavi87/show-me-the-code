@@ -31,25 +31,28 @@ public class TomcatGracefulShutdown implements TomcatConnectorCustomizer, Applic
             log.error("error", e);
         }
 
-        this.connector.pause();
-        Executor executor = this.connector.getProtocolHandler().getExecutor();
-        if (executor instanceof ThreadPoolExecutor) {
-            try {
-                ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executor;
-                threadPoolExecutor.shutdown();
-                if (!threadPoolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
-                    log.warn("Tomcat thread pool did not shut down gracefully within "
-                            + TIMEOUT + " seconds. Proceeding with forceful shutdown");
-
-                    threadPoolExecutor.shutdownNow();
-
+        if (this.connector != null) {
+            this.connector.pause();
+            Executor executor = this.connector.getProtocolHandler().getExecutor();
+            if (executor instanceof ThreadPoolExecutor) {
+                try {
+                    ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executor;
+                    threadPoolExecutor.shutdown();
                     if (!threadPoolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
-                        log.error("Tomcat thread pool did not terminate");
+                        log.warn("Tomcat thread pool did not shut down gracefully within "
+                                + TIMEOUT + " seconds. Proceeding with forceful shutdown");
+
+                        threadPoolExecutor.shutdownNow();
+
+                        if (!threadPoolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
+                            log.error("Tomcat thread pool did not terminate");
+                        }
                     }
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
                 }
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
             }
+
         }
     }
 }
