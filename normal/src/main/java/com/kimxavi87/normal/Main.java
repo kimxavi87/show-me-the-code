@@ -22,5 +22,14 @@ public class Main {
         thread.setDaemon(true);
         thread.start();
         System.out.println("End");
+
+        Runnable shutdownHook = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("ShutdownHook");
+            }
+        };
+
+        Runtime.getRuntime().addShutdownHook(new Thread(shutdownHook));
     }
 }
