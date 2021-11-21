@@ -1,4 +1,4 @@
-package com.kimxavi87.spring;
+package com.kimxavi87.spring.palyer;
 
 import com.kimxavi87.spring.player.entity.Member;
 import com.kimxavi87.spring.player.reposiotry.MemberRepository;
