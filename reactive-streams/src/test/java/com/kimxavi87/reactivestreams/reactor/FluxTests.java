@@ -71,4 +71,9 @@ public class FluxTests {
                 .doOnNext(s -> log.info(s))
                 .blockLast();
     }
+
+    @Test
+    public void monoCannotReturnNull() {
+        // mono<?> 을 return null 로 하면 error 발생한다
+    }
 }
