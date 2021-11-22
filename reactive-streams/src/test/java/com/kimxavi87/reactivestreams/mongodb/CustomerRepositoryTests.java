@@ -53,16 +53,16 @@ public class CustomerRepositoryTests {
 
     @Test
     public void givenBasicQueryLt_whenQuery_thenFoundSuccess() {
-        reactiveRepository.save(new Customer(null, "kim", 19990909)).block();
+        reactiveRepository.save(new Customer(null, "kim", 10)).block();
 
-        BasicQuery basicQuery = new BasicQuery("{ birth: { $lt: 20000000 } }");
+        BasicQuery basicQuery = new BasicQuery("{ birth: { $lt: 20 } }");
 
         Flux<Customer> customerFlux = mongoTemplate.find(basicQuery, Customer.class);
 
         StepVerifier.create(customerFlux)
                 .assertNext(customer -> {
                     System.out.println("customer : " + customer);
-                    assertThat(customer.getBirth() < 20000000).isEqualTo(true);
+                    assertThat(customer.getBirth() < 20).isEqualTo(true);
                 })
                 .expectComplete()
                 .verify(Duration.ofSeconds(30));
@@ -70,11 +70,11 @@ public class CustomerRepositoryTests {
 
     @Test
     public void givenCustomerExample_whenFind_thenFound() {
-        reactiveRepository.save(new Customer(null, "kim", 19990909)).block();
+        reactiveRepository.save(new Customer(null, "kim", 1999090909)).block();
 
         // 전부 일치하게 넣어야지 찾아짐, name만 넣을 경우는 못 찾음
         // 다른 객체로 만들어서 넣을 순 없다
-        Customer query = new Customer(null, "kim", 19990909);
+        Customer query = new Customer(null, "kim", 1999090909);
         Example<Customer> example = Example.of(query);
 
         Flux<Customer> fluxFound = reactiveRepository.findAll(example);
