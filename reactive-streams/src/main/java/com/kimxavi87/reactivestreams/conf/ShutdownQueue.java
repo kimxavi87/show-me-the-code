@@ -12,6 +12,7 @@ public enum ShutdownQueue {
         System.out.println("ShutdownQueue : addShutdownHook");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             while (!INSTANCE.disposableList.isEmpty()) {
+                System.out.println("Shutdown disposable...");
                 Disposable disposable = INSTANCE.disposableList.poll();
                 disposable.dispose();
             }

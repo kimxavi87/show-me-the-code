@@ -5,6 +5,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
@@ -100,6 +101,7 @@ public class EmbeddedKafkaTests {
                 .verify(DEFAULT_VERIFY_TIMEOUT);
     }
 
+    @Disabled
     @Test
     public void givenStringValue_whenHappenException_thenKeepReceive() throws InterruptedException {
         Flux.interval(Duration.ofSeconds(1))

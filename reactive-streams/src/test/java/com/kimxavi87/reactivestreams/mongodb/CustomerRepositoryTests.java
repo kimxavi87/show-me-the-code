@@ -16,6 +16,7 @@ import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// todo : 다른 테스트 클래스에서도 데이터가 겹칠까?
 @SpringBootTest
 public class CustomerRepositoryTests {
     @Autowired

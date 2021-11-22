@@ -1,6 +1,7 @@
 package com.kimxavi87.reactivestreams.reactor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,6 +30,7 @@ public class FluxTests {
 
     // conditional vs normal
 
+    @Disabled
     @Test
     public void interval() throws InterruptedException {
         Flux.interval(Duration.ofSeconds(1))
