@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MockTcpServer implements Closeable {
+public class AsyncTcpServer2 implements Closeable {
     private InetSocketAddress inetSocketAddress;
 
     public void start(int port) throws IOException, ExecutionException, InterruptedException, TimeoutException {
