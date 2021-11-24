@@ -26,6 +26,10 @@ public class ApiPathControllerTests {
         mvc.perform(get("/api/something"))
                 .andExpect(status().isOk())
                 .andReturn();
+
+        mvc.perform(get("/api/something2"))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
