@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import reactor.core.publisher.Flux;
@@ -86,6 +87,19 @@ public class CustomerRepositoryTests {
                     assertThat(customer.getName()).isEqualTo(query.getName());
                     assertThat(customer.getBirth()).isEqualTo(query.getBirth());
                 })
+                .expectComplete()
+                .verify(Duration.ofSeconds(30));
+    }
+
+    @Test
+    public void givenThreeSameBirthCustomer_whenPageRequestTwo_thenCountIsTwo() {
+        reactiveRepository.save(new Customer(null, "lee", 19990102)).block();
+        reactiveRepository.save(new Customer(null, "kim", 19990102)).block();
+        reactiveRepository.save(new Customer(null, "park", 19990102)).block();
+
+        Flux<Customer> byBirth = reactiveRepository.findByBirth(19990102, PageRequest.of(0, 2));
+        StepVerifier.create(byBirth)
+                .expectNextCount(2)
                 .expectComplete()
                 .verify(Duration.ofSeconds(30));
     }
