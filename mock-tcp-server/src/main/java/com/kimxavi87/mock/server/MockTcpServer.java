@@ -79,10 +79,32 @@ public class MockTcpServer implements Server, Closeable {
                     }
 
                     openClientSockets.add(socket);
-//                    serveConnection(socket);
+                    serveConnection(socket);
                 }
             }
         });
+    }
+
+    private void serveConnection(final Socket socket) {
+        executor.execute(new NamedRunnable("MockTcpServer %s", socket.getRemoteSocketAddress()) {
+            @Override
+            protected void execute() {
+                try {
+                    processConnection();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            private void processConnection() throws IOException {
+                // todo socket policy 들에 따라서 처리
+                // todo while(processOneRequest)
+
+                socket.close();
+                openClientSockets.remove(socket);
+            }
+        });
+
     }
 
     @Override
