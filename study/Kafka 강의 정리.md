@@ -1,0 +1,248 @@
+# Kafka 강의
+
+- 기본 개념 및 이해
+
+움직이는 데이터를 다루는 플랫폼
+
+이벤트 스트리밍 플랫폼
+
+이벤트는 비즈니스에서 일어나는 모든 일, 데이터를 의미
+
+- 특징
+
+이벤트 스트림을 안전하게 전송
+
+publish, subscribe
+
+이벤트 스트림을 디스크에 저장
+
+이벤트 스트림을 분석 및 처리
+
+- 사용처
+    - 메시징 시스템
+    - 데이터 수집
+    - 로그 수집
+    - 리얼 타임 이벤트 스트림 프로세싱
+        - 이상 감지 등
+    - MSA 기반의 분리된 DB간 DB 동기화
+    - 실시간 ETL
+- -----------------------------------------
+- Producer, Consumer
+    - Producer 와 Consumer는 서로 알지 못하며 각각 고유의 속도로 가져간다
+    - Commit Log
+        - 추가만 가능하고 변경 불가능한 데이터 스트럭처
+        - 데이터는 항상 로그 끝에 추가되고 변경되지 않음
+    - offset
+        - Commit Log 에서 Event의 위치
+    - Log-END-OFFSET
+        - producer 가 write하는 커밋로그의 끝부분
+    - CURRENT-OFFSET
+        - Consumer Group의 consumer가 read하고 처리한 후에 commit한 위치
+    - CONSUMER-LAG
+        - LOG-END-OFFSET 과 CURRENT-OFFSET의 차이
+    - TOPIC
+        - 메시지가 저장되는 장소, 논리적인 표현
+    - Partition
+        - Commit log
+    - Segment
+        - 메시지 데이터가 저장되는 실제 물리 File
+        - 지정된 크기보다 크거나 지정된 기간보다 오래되면 새파일이 열리고 메시지는 새 파일에 추가됨
+        - 즉, 파티션에 여러개의 세그먼트가 존재
+    - 실제 Physical
+        - 브로커들에 파티션이 분산 된다
+        - 최적의 위치로 위치 시킨다
+        - 파티션 자체는 파일을 rolling 하여 분리/생성한다
+        - Rolling Strategy
+            - log.segment.bytes
+            - log.roll.hours
+        - 파티션당 오직 하나의 Segment(마지막 세그먼트)가 활성화 되어 있음
+    - 운영시 파티션 개수 변경을 권장하진 않음
+    - 파티션들은 서로 독립적임
+    - 오프셋은 하나의 파티션에서만 의미를 가짐
+        - 파티션 별로 각각 독립적
+    - Offset 값은 계속 증가하고 0으로 돌아가지 않음
+    - 이벤트의 순서는 하나의 파티션 내에서만 보장
+    - 파티션에 저장된 데이터는 변경이 불가능
+    - 파티션에 저장되는 데이터는 맨 끝에 추가되어 저장됨
+- -----------------------------------------
+
+Broker, Zookeeper
+
+- Broker
+    - 파티션에 대한 Read, Write를 관리하는 소프트웨어
+    - Kafka Server
+    - 토픽 내의 파티션들을 분산, 유지 및 관리
+    - 각각 브로커들은 숫자 ID로 식별됨
+    - 토픽의 일부분을 갖을 뿐 데이터 전체를 갖고 있진 않음
+    - 클라이언트가 특정 브로커에 연결하면 전체 클러스터에 연결됨
+        - 모든 Kafka Broker는 부트스트랩 서버라고 부름
+            - 하나의 브로커에 연결을 요청하면
+            - 모든 브로커 리스트를 전달해줌
+            - 클라이언트는 자기가 필요한 브로커로 접속해서 연결됨
+        - 장애를 대비해서 브로커 전체 리스트를 넣어주는게 보통
+    - 최소 3대 이상, 4대 이상을 권장
+- Zookeeper
+    - 브로커를 관리하는 소프트웨어
+    - 변경사항에 대해 카프카에 알림
+        - 토픽 생성/제거, 브로커 추가/제거 등
+    - Zookeeper 제거가 진행중
+    - 홀수의 서버로 작동하게 설계 되어 있음
+        - 최소3, 권장5
+    - 리더(write) 팔로워(read)
+        - 리더에서 데이터를 가져가서 동기화
+    - 분산 작업을 제어하기 위한 Tree 형태의 데이터 저장소
+    - 클러스터를 Zookeeper Ensemble 이라 한다
+- Quorum 기반 알고리즘
+    - 합의체가(앙상블) 의사를 진행시키거나 의결을 하는데 필요한 최소한도의 인원수
+    - 과반수 이상의 정족수가 필요함
+- -----------------------------------------
+- 다른 Consumer Group은 서로 관련이 없으며 서로 다른 위치를 읽을 수 있음
+- 메시지 == 레코드 == 이벤트 == 데이터
+- 레코드 구조
+    - 헤더 - 메타데이터
+        - topic, partition, timestamp, etc
+    - key, value - 바디
+        - Avro, json등 다양한 형태가 가능
+    - Record(데이터)를 Byte Array로 저장
+        - 프로듀서의 Serializers 를 통해 byte Array로 변환되고 브로커로 전송됨
+        - consumer 에서 deserializer에서 다시 변환돼서 사용됨
+- 호출 과정
+    - 레코드를 만듦
+    - send() 호출
+    - Serializer 를 통해 바이트 어레이로 변환
+    - Partitioner를 통해 어느 파티션으로 전달할지 정해짐
+    - 압축 옵션이 있으면 진행
+    - Batch 형태로 카프카로 전송
+    - 응답으로
+        - 성공
+            - 메타데이터 리턴
+        - 재시도 옵션에 따라서
+            - 재시도 하다가 할 수 없으면 Exception 발생
+- Partitioner
+    - 기본은 hash(key) 를 파티션 개수를 통해 % 연산을 해서 보냄
+        - key가 null이 아닐 때
+        - key가 null 이면?
+            - 2.4 이전은 라운드 로빈 정책으로 동작
+                - 단점은 배치 형태로 보내야되는데 덜 담겨서 날라가게 됨
+            - 2.4 이후는 sticky 정책으로 배치가 다 찰때까지 채운 다음에 묶어서 랜덤으로 파티션 선택하도록 동작
+- -----------------------------------------
+- Consumer
+    - 파티션으로부터 레코드를 가져옴(poll)
+    - Commit Log로부터 순서대로 read(poll)
+- Consumer offset
+    - Consumer 그룹이 읽은 위치를 표시
+        - 읽은 위치를 커밋하여 다시 읽음을 방지
+    - 인터널 토픽인 Topic __consumer_offsets 에 저장
+        - 컨슈머 자체가 가지고 있는게 아님
+        - GroupA:MyTopic:P0:3
+        - GroupB:MyTopic:P1:2
+- 컨슈머는 주어진 topic에서 0개 이상의 많은 파티션을 사용할 수 있음
+- 컨슈머 그룹의 컨슈머들은 작업량을 어느 정도 균등하게 분할함
+- 메시지 순서 보장
+    - 파티션이 2개 이상인 경우 모든 메시지에 대한 전체 순서 보장 불가능
+    - 파티션을 1개로 구성하면 전체 순서 보장 가능
+        - 처리량 저하
+            - 병렬처리가 되지 않음
+    - 대부분의 경우 key로 구분할 수 있는 메시지들의 순서 보장이 필요한 경우가 많음
+        - 동일한 key를 가진 메시지는 동일한 파티션에만 전달되어 key 레벨의 순서 보장 가능
+        - 이러면 멀티 파티션 사용이 가능하다
+        - 운영 중에 파티션 개수를 변경하면? 순서 보장이 불가능해진다
+- Cardinality
+    - Key Cardinality는 컨슈머 그룹의 개별 컨슈머가 수행하는 작업의 양에 영향
+    - 특정 데이터 집합에서 유니크한 값의 개수
+    - key 선택이 잘 못 되면 작업 부하가 고르지 않을 수 있음
+    - 파티션 전체에 레코드를 고르게 배포하는 키를 만드는 것이 중요
+- 컨슈머 failure
+    - 컨슈머 리밸런싱
+- -----------------------------------------
+- Replication
+    - 장애를 대비하기 위한 기술
+        - 파티션을 복제하여 다른 브로커상에서 복제물(Replicas)를 만들어서 장애를 미리 대비
+    - producer는 리더에만 write 하고 consumer는 리더에서만 read 함
+        - 버전에 따라서 좀 다르긴 함
+    - 팔로워는 브로커 장애시 안정성을 제공하기 위해서만 존재
+    - 리더의 커밋 로그에서 데이터를 가져오기 요청(fetch request) 으로 복제
+    - 버전 2.4 부터는 follower fetching(read) 가능
+- 하나의 브로커에만 파티션의 리더들이 몰려 있다면?
+    - Hot Spot 방지
+    - 특정 브로커에만 부하가 집중됨
+    - 방지하기 위한 옵션
+    - auto.leader.rebalance.enable
+        - 기본값 true
+    - leader.imbalance.check.interval.seconds
+        - 주기마다 체크 300sec
+    - ldeader.imbalance.per.broker.percentage
+        - 얼만큼 더 가져가면 불균형이다
+        - 기본 10(%)
+- rack 간 분산하여 rack 장애를 대비
+    - rack 간 브로커를 분산
+    - 다른 rack에 있다는 것을 알려줘야함
+        - broker.rack=
+    - 토픽 생성 시 또는 Auto Data Balancer/Self Balancing Cluster 동작 때만 실행
+- -----------------------------------------
+- In-Sync Replicas
+    - 정말 잘 복제하고 있느냐를 판단하는 지표
+    - Leader 장애시 Leader를 선출하는데 사용
+    - High Water Mark 라고 하는 지점까지 동일한 Replicas의 목록 (리더와 팔로워 모두)
+    - replica.lag.max.messages=
+        - 이 옵션을 통해서 판단
+        - 범위를 벗어나면
+            - Out-of-Sync Follower
+            - 만약 4 면 3개 까지
+    - 문제점?
+        - 메시지 유입량이 갑자기 늘어날 경우, 순간 개수가 넘어가면서 지연으로 판단하고 OSR로 상태를 변경시킴
+        - 발생하게 되면 문제점?
+            - 불필요한 에러가 발생함
+            - 불필요한 retry가 프로듀서 쪽에서 발생하게 된다
+        - replica.lag.time.max.ms 으로 판단해야함
+            - follwer 가 leader로 fetch 요청을 보내는 interval을 체크
+- ISR은 리더 브로커가 관리
+    - 리더 브로커가 Zookeeper에 ISR 업데이트
+    - Zookeeper Cluster 에서 Controller 브로커로 파티션 메타데이터에 대한 변경사항을 보냄
+- Controller
+    - 카프카 클러스터 내의 브로커중 하나가 Controller가 됨
+    - Broker Liveness 를 주키퍼를 통해 모니터링
+    - 변경사항들, 리더와 replica 정보를 클러스터 내의 다른 브로커에게 전달
+    - 컨트롤러는 ZooKeeper에 Replicas 정보의 복사본을 더 빠르 ㄴ액세스를 위해 클러스터의 모든 브로커들에게 동일한 정보를 캐시함
+    - 파티션에 대한 리더 장애시, Leader Election을 수행
+    - Controller 가 장애가 나면 Zookeeper가 다른 Acctive Broker 들 중에서 재선출함
+- Offset
+    - Last Committed Offset
+        - 컨슈머가 최종 커밋한 오프셋
+    - Current Position
+        - 처리 중, commit 전
+        - 배치로 왕창 읽어간, Consumer가 읽어간 위치
+    - High Water Mark (committed)
+        - ISR 간에 복제된 Offset
+    - Log End Offset
+        - 프로듀서가 메시지를 보내서 저장된, 로그의 맨 끝
+    - Last Committed <-> Log ENd Offset
+        - 이 사이를 lag
+- Committed 의미
+    - ISR 목록의 모든 Replicas가 메시지를 받으면 Committed
+        - Fully-Replicated
+    - Consumer는 Committed 메시지까지만 읽을 수 있음
+    - 리더는 메시지를 Commit 할 시기를 결정
+    - Committed 메시지는 모든 팔로워에서 동일한 offset을 갖도록 보장
+    - 어떤 Replica가 리더인지에 관계 없이 모든 컨슈머는 해당 offset에서 같은 데이터를 볼수 있음(장애 발생이라도)
+    - 브로커가 다시 시작할 때
+        - Committed 메시지 목록을 유지하도록 하기 위해
+        - 브로커의 모든 파티션에 대한 마지막 Committed Offset은 replication-offset-checkpoint 라는 파일에 기록됨
+        - 데이터를 다시 복제해오거나 이런 작업이 이뤄짐
+- High Water Mark
+    - 가장 최근에 Committed 메시지의 offset 추적
+    - ISR 간에 복제된 Offset
+    - replication-offset-checkpoint 파일에 체크포인트를 기록
+- Leader Epoch
+    - 새 리더가 선출된 시점을 offset으로 표시
+    - 브로커 복구 중에 메시지를 체크포인트로 자른 다음 현재 리더를 따르기 위해 사용됨
+    - 컨트롤러가 새 리더를 선택하면 leader epoch를 업데이트하고 해당 정보를 ISR 목록의 구성원에게 보냄
+    - leader-epoch-checkpoint 파일에 체크포인트를 기록
+- 메시지 커밋 과정
+    - 팔로워는 리더로부터 fetch만 수행
+    - 과정
+        - 프로듀서로 부터 리더 브로커에 새 메시지 추가
+        - 각 follower들의 fetcher thread가 독립적으로 fetch를 수행하고 가져온 메시지를 offset에 write
+        - 각 팔로워들의 fetcher 쓰레드가 독립적으로 다시 fetch를 수행하고 null을 받음
+            - leader는 high water mark 이동
+        - 또 fetch 요청, 수행하고 high water mark를 받음
