@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.data:spring-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     implementation 'io.projectreactor:reactor-core'
     implementation 'io.projectreactor.kafka:reactor-kafka'
 
@@ -42,6 +43,7 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test:'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+    testImplementation 'com.github.fppt:jedis-mock:0.1.23'
 
     testImplementation("com.squareup.okhttp3:mockwebserver")
 }

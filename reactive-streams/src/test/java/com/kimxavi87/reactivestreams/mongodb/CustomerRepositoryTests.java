@@ -1,8 +1,8 @@
 package com.kimxavi87.reactivestreams.mongodb;
 
-import com.kimxavi87.reactivestreams.Customer.Customer;
-import com.kimxavi87.reactivestreams.Customer.CustomerCrudRepository;
-import com.kimxavi87.reactivestreams.Customer.CustomerReactiveRepository;
+import com.kimxavi87.reactivestreams.customer.Customer;
+import com.kimxavi87.reactivestreams.customer.CustomerCrudRepository;
+import com.kimxavi87.reactivestreams.customer.CustomerReactiveRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
