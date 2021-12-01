@@ -1,4 +1,4 @@
-package com.kimxavi87.reactivestreams.Customer;
+package com.kimxavi87.reactivestreams.customer;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

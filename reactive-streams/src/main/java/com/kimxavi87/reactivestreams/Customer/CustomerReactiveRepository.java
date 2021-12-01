@@ -1,4 +1,4 @@
-package com.kimxavi87.reactivestreams.Customer;
+package com.kimxavi87.reactivestreams.customer;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
