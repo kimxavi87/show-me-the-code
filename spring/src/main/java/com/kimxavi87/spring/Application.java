@@ -4,8 +4,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -15,6 +17,7 @@ public class Application implements ApplicationRunner {
     public static final AtomicBoolean isRunningForBean = new AtomicBoolean(false);
     public static final AtomicBoolean isMain = new AtomicBoolean(false);
     public static final AtomicBoolean isRunningForMain = new AtomicBoolean(false);
+    public static final AtomicBoolean isRunningForEvent = new AtomicBoolean(false);
 
     public static void main(String[] args) {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class, args);
@@ -22,6 +25,11 @@ public class Application implements ApplicationRunner {
         application.start();
 
         isMain.compareAndSet(false, true);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void doSomethingAfterStartup() {
+        isRunningForEvent.compareAndSet(false, true);
     }
 
     public void start() {
