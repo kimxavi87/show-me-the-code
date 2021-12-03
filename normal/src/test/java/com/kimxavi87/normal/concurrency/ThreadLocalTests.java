@@ -29,7 +29,8 @@ public class ThreadLocalTests {
     }
 
     public static class Job implements Runnable {
-        // ThreadLocal 내부에서 Map을 통해서 쓰레드별로 값을 제공할 수 있도록 함
+        // Thread 내부에서 Map을 통해서 쓰레드 별로 값을 제공할 수 있도록 함
+        // Thread.threadLocals
         public static ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 5);
         private CountDownLatch countDownLatch;
 
@@ -63,16 +64,35 @@ public class ThreadLocalTests {
         // 또 사용될 수 있음을 알아야한다
 
         // 그래서 쓰레드 빌리고, 반납하기 전에 ThreadLocal 을 정리하는 작업이 필요함
-        // Executors.newSingleThreadExecutor() 와 유사하게 생성
+        Executors.newSingleThreadExecutor(); //이것과 유사하게 아래 생성
         ThreadLocalAwareThreadPool threadPool = new ThreadLocalAwareThreadPool(2, 2, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Hello Runnable");
-            }
-        });
+        threadPool.execute(new JobWithThreadLocal());
+        threadPool.execute(new JobWithThreadLocal());
+        threadPool.execute(new JobWithThreadLocal());
+
+        // remove 전에는
+        // threadLocal.get() => 10, after set => 5
+        // threadLocal.get() => 10, after set => 5
+        // threadLocal.get() => 5, after set => 5
+
+        // remove 로직 넣고 나서는
+        // threadLocal.get() => 10, after set => 5
+        // threadLocal.get() => 10, after set => 5
+        // threadLocal.get() => 10, after set => 5
 
         Thread.sleep(5000);
+    }
+
+    public static class JobWithThreadLocal implements Runnable {
+        public static ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 10);
+
+        @Override
+        public void run() {
+            System.out.println("starting : " + threadLocal.get());
+            threadLocal.set(5);
+            System.out.println("after set 5 : " + threadLocal.get());
+            System.out.println("Hello Runnable : JobWithThreadLocal");
+        }
     }
 
     public class ThreadLocalAwareThreadPool extends ThreadPoolExecutor {
@@ -89,7 +109,9 @@ public class ThreadLocalTests {
         @Override
         protected void afterExecute(Runnable r, Throwable t) {
             // todo : Call remove on each ThreadLocal
-            System.out.println("after execute");
+            System.out.println("after execute " + Thread.currentThread().getName());
+            System.out.println(r.getClass());
+            JobWithThreadLocal.threadLocal.remove();
         }
     }
 }
