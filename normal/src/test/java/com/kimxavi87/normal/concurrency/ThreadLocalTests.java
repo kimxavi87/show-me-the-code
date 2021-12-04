@@ -58,8 +58,7 @@ public class ThreadLocalTests {
     @Test
     public void threadLocalWithPool() throws InterruptedException {
         // thread pool 와 함께 사용할 때는 주의 사항이 있다
-        // 애플리케이션은 쓰레드 풀에서 특정 작업을 할 때, 쓰레드를 가져온다
-        // 다 쓴 쓰레드는 반납한다
+        // 애플리케이션은 쓰레드 풀에서 특정 작업을 할 때, 쓰레드를 가져오고, 다 쓴 쓰레드는 반납한다
         // 또 작업을 하기 위해서 쓰레드를 가져 왔을 때, 이전에 사용하던 ThreadLocal 데이터가
         // 또 사용될 수 있음을 알아야한다
 
@@ -95,7 +94,7 @@ public class ThreadLocalTests {
         }
     }
 
-    public class ThreadLocalAwareThreadPool extends ThreadPoolExecutor {
+    public static class ThreadLocalAwareThreadPool extends ThreadPoolExecutor {
 
         public ThreadLocalAwareThreadPool(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
             super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
@@ -108,9 +107,9 @@ public class ThreadLocalTests {
 
         @Override
         protected void afterExecute(Runnable r, Throwable t) {
-            // todo : Call remove on each ThreadLocal
             System.out.println("after execute " + Thread.currentThread().getName());
             System.out.println(r.getClass());
+            // Call remove on each ThreadLocal
             JobWithThreadLocal.threadLocal.remove();
         }
     }
