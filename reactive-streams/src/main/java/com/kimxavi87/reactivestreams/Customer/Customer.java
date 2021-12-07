@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Sharded;
 
 @ToString
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
+@Sharded(shardKey = {"name", "birth"})
 @Document
 public class Customer {
     @Id
