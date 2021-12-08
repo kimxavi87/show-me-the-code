@@ -30,16 +30,17 @@ public class ReactiveStreams {
                 .doOnNext(i -> System.out.println("testFlux : " + i));
     }
 
-    @Bean
-    public ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
-
-        var initializer = new ConnectionFactoryInitializer();
-        initializer.setConnectionFactory(connectionFactory);
-        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ByteArrayResource((
-                "DROP TABLE IF EXISTS product;"
-                        + "CREATE TABLE product (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL);")
-                .getBytes())));
-
-        return initializer;
-    }
+    // todo test 코드에서 에러 발생하는것 수정
+//    @Bean
+//    public ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
+//
+//        var initializer = new ConnectionFactoryInitializer();
+//        initializer.setConnectionFactory(connectionFactory);
+//        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ByteArrayResource((
+//                "DROP TABLE IF EXISTS product;"
+//                        + "CREATE TABLE product (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL);")
+//                .getBytes())));
+//
+//        return initializer;
+//    }
 }
