@@ -44,7 +44,8 @@ public class TeamControllerTests {
     public void givenSetParam_whenDeleteMethod_thenConvertParamsToObject() throws Exception {
         Set<String> names = Set.of("liverpool", "chelsea");
         mvc.perform(delete("/team")
-                .param("names", StringUtils.arrayToCommaDelimitedString(names.toArray())))
+                .param("names", StringUtils.arrayToCommaDelimitedString(names.toArray()))
+                .content("delete body"))
                 .andExpect(status().isOk())
                 .andReturn();
     }

@@ -29,8 +29,11 @@ public class TeamController {
     }
 
     @DeleteMapping("/team")
-    public ResponseEntity<Void> deleteTeams(DeleteTeamsRequest request) {
-        log.info("DELETE REQ : {}", request);
+    public ResponseEntity<Void> deleteTeams(DeleteTeamsRequest request,
+                                            @RequestBody String body) {
+        // Param들이 객체로 담아서 온다
+        // body도 사용 가능
+        log.info("DELETE REQ : {} BODY : {}", request, body);
 
         return ResponseEntity.ok().build();
     }
