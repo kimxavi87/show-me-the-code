@@ -1,4 +1,4 @@
-package com.kimxavi87.spring.player;
+package com.kimxavi87.spring.player.controller;
 
 import com.kimxavi87.spring.conf.validator.PageableValid;
 import com.kimxavi87.spring.player.dto.MemberInput;
@@ -59,9 +59,9 @@ public class MemberController {
                 .build();
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
-        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
+//        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
 }

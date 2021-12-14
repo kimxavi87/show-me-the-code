@@ -16,10 +16,6 @@ public class PageableValidator implements ConstraintValidator<PageableValid, Pag
 
     @Override
     public boolean isValid(Pageable pageable, ConstraintValidatorContext context) {
-        if (pageable.getPageSize() <= maxPerPage) {
-            return true;
-        }
-
-        return false;
+        return pageable.getPageSize() <= maxPerPage;
     }
 }

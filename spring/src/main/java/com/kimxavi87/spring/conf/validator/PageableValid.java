@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PageableValidator.class)
 public @interface PageableValid {
-    String message() default "Invalid pagination";
+    String message() default "page.error";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
