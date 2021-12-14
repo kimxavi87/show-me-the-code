@@ -89,8 +89,10 @@ public class MemberControllerTests {
 
     @Test
     public void givenWrongPageSize_whenRequestMemberList_thenBadRequest() throws Exception {
-        mvc.perform(get("/membersWithPageValid?size=101"))
+        MvcResult mvcResult = mvc.perform(get("/membersWithPageValid?size=101"))
                 .andExpect(status().isBadRequest())
                 .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
     }
 }

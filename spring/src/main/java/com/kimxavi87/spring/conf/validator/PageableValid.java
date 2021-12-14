@@ -15,5 +15,5 @@ public @interface PageableValid {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-    int maxPerPage() default 100;;
+    int maxPerPage() default 100;
 }
