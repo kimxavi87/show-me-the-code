@@ -16,6 +16,8 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -148,6 +150,11 @@ public class TcpServerTests {
                 while (true) {
                     SocketChannel ch = server.accept();
                     while (server.isOpen()) {
+                        ByteBuffer in = ByteBuffer.allocate(32);
+                        ch.read(in);
+                        System.out.println(new String(in.array(), StandardCharsets.UTF_8));
+                        in.flip();
+
                         ByteBuffer out = ByteBuffer.allocate(1);
                         out.put((byte) '\n');
                         out.flip();
