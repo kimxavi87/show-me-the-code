@@ -9,6 +9,22 @@
 
 ~~~java
 
+// bridge method 생성 전
+public class MyComparator implements Comparator {
+   public int compare(Integer a, Integer b) {
+   }
+}
+
+// 생성 후
+public class MyComparator implements Comparator<Integer> {
+   public int compare(Integer a, Integer b) {
+   }
+
+   // bridge method
+   public int compare(Object a, Object b) {
+      return compare((Integer)a, (Integer)b);
+   }
+}
 
 ~~~
 
