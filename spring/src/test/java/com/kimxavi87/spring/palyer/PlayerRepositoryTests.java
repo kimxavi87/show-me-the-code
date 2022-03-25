@@ -121,8 +121,10 @@ public class PlayerRepositoryTests {
     }
 
     @Test
-    public void usingAbstractClass() {
-        teamRepository.bulkInsert();
+    public void extendRepository() {
+        teamRepository.bulkInsert(List.of(new Team(10L, "ManUTD")));
+        List<Team> manUTD = teamRepository.findByName("ManUTD", PageRequest.of(0, 10));
+        manUTD.forEach(System.out::println);
     }
 
     private void createManyTeamsAndMembers() {
