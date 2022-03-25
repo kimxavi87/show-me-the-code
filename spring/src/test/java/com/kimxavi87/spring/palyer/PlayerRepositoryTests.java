@@ -120,6 +120,11 @@ public class PlayerRepositoryTests {
         allByNameIn.stream().forEach(mm -> System.out.println(mm.getName() + " : " + mm.getTeam().getName()));
     }
 
+    @Test
+    public void usingAbstractClass() {
+        teamRepository.bulkInsert();
+    }
+
     private void createManyTeamsAndMembers() {
         List<Team> premireTeams = Stream.of("liverpool", "tottenham", "ManU", "Chelsea")
                 .map(Team::new)
