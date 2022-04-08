@@ -5,12 +5,14 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@EnableCaching
 @SpringBootApplication
 public class Application implements ApplicationRunner {
     public static final AtomicBoolean isRunning = new AtomicBoolean(false);
