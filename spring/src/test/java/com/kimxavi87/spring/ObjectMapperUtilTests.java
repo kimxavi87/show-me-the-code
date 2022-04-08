@@ -1,10 +1,12 @@
 package com.kimxavi87.spring;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.kimxavi87.spring.player.dto.MemberInput;
 import com.kimxavi87.spring.utils.ObjectMapperUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +56,19 @@ public class ObjectMapperUtilTests {
         assertThat(result.get("age")).isEqualTo(age);
     }
 
+    @Test
+    public void givenJsonString_whenConvertObject_thenSuccess() {
+        TestObject testObject = new TestObject("a", 20);
+        Optional<String> jsonString = ObjectMapperUtil.objectToJsonString(testObject);
+        Optional<TestObject> result= ObjectMapperUtil.jsonToObject(jsonString.get(), new TypeReference<>() {});
+
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get().getName()).isEqualTo(testObject.getName());
+        assertThat(result.get().getAge()).isEqualTo(testObject.getAge());
+    }
+
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class TestObject {
         private String name;
