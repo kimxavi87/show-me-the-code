@@ -19,6 +19,7 @@ class ReactiveRedisTests {
 
     static ReactiveRedisTemplate<String, Employee> reactiveRedisTemplate;
     static RedisServer redisServer;
+    static LettuceConnectionFactory redisConnectionFactory;
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -41,6 +42,7 @@ class ReactiveRedisTests {
         RedisSerializationContext<String, Employee> context =
                 builder.value(valueSerializer).build();
         reactiveRedisTemplate = new ReactiveRedisTemplate<>(factory, context);
+        redisConnectionFactory = factory;
         System.out.println("reactiveRedisTemplate is Created");
     }
 
@@ -48,6 +50,9 @@ class ReactiveRedisTests {
     static void tearDown() {
         redisServer.stop();
         redisServer = null;
+
+        redisConnectionFactory.destroy();
+        redisConnectionFactory = null;
     }
 
     @Test
