@@ -1,6 +1,7 @@
 package com.kimxavi87.reactivestreams;
 
 import com.github.fppt.jedismock.RedisServer;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 class ReactiveRedisTests {
 
     static ReactiveRedisTemplate<String, Employee> reactiveRedisTemplate;
@@ -68,6 +70,20 @@ class ReactiveRedisTests {
         reactiveRedisTemplate.opsForValue().set(keyPrefix + employee.getName(), employee).block();
         Employee gottenEmployee = reactiveRedisTemplate.opsForValue().get(keyPrefix + employee.getName()).block();
         assertThat(gottenEmployee).isEqualTo(employee);
+    }
+
+    @Test
+    public void whenNotFoundValue_thenCantGetNext() {
+        Employee hello = reactiveRedisTemplate.opsForValue()
+                .get("hello")
+                .doOnNext(employee -> log.info("doOnNext : {}", employee))
+                .doOnSuccess(employee -> log.info("doOnSuccess : {}", employee))
+                .map(employee -> {
+                    log.info("map : {}", employee);
+                    return employee;
+                })
+                .block();
+        assertThat(hello).isNull();
     }
 
     static class Employee {
