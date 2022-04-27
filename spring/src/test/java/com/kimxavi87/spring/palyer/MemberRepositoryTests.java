@@ -183,4 +183,47 @@ public class MemberRepositoryTests {
         memberRepository.saveAll(members);
         return members;
     }
+
+    @Test
+    public void persistenceContext() {
+        String name = "Park-ji-sung";
+        Member member = new Member(name);
+        memberRepository.save(member);
+
+        String name2 = "Lee-Chung-Yong";
+        Member member2 = new Member(name2);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        // query 조건이 ID 가 아닌 경우
+        // 두 번의 쿼리가 모두 실행돼서 로그에 남음
+        List<Member> byName = memberRepository.findByName(name);
+        List<Member> byName1 = memberRepository.findByName(name);
+
+        // name 으로 가져온 entity 에서 조회가 됐는지 쿼리가 나가지 않는다
+        Optional<Member> byId = memberRepository.findById(member.getId());
+        Optional<Member> byId1 = memberRepository.findById(member.getId());
+
+        System.out.println(member.getId());
+        // 쿼리가 한번만 나감
+        Optional<Member> byId2 = memberRepository.findById(member2.getId());
+        Optional<Member> byId3 = memberRepository.findById(member2.getId());
+
+        // id로 조회한 후에 name으로 조회하는 경우에도 쿼리가 나간다
+        List<Member> byName2 = memberRepository.findByName(member2.getName());
+
+        System.out.println(byName);
+        System.out.println(byName1);
+        System.out.println(byName2);
+        System.out.println(byId.get().getName());
+        System.out.println(byId1.get().getName());
+        System.out.println(byId2.get().getName());
+        System.out.println(byId3.get().getName());
+
+        // 결론은 영속성 컨텍스트에서 이미 있는 데이터를 찾는 경우는 ID 조건일 때만 찾음
+        // 데이터가 없을 경우에 쿼리가 나감
+        // 영속성 컨텍스트에 저장이 되는 것은 쿼리 조건에 상관 없이 저장이 된다
+    }
 }

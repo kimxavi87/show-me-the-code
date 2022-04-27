@@ -11,6 +11,7 @@ import java.util.Set;
 
 public interface MemberRepository extends CrudRepository<Member, Long> {
     List<Member> findAll(Pageable pageable);
+    List<Member> findByName(String name);
     // name이 아니라 names 로 파라미터 해도 되네 기준이 뭐지, long 같은 것 넣으면 bean 생성 에러 발생
     // @Query 없으면 @Modifying 없어도 쿼리가 나간다
     List<Member> findAllByNameIn(Set<String> names);
