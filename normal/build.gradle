@@ -13,6 +13,12 @@ dependencies {
     implementation 'org.apache.curator:curator-framework:5.2.0'
     testImplementation 'org.apache.curator:curator-test:5.2.0'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
 test {
