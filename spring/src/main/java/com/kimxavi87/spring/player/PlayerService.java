@@ -17,6 +17,7 @@ import java.util.List;
 @Validated
 @Service
 public class PlayerService {
+    private final DummyService dummyService;
     private final TeamRepository teamRepository;
 
     @Transactional
