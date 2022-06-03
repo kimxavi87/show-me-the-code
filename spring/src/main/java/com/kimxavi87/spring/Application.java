@@ -1,5 +1,6 @@
 package com.kimxavi87.spring;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,8 +11,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@RequiredArgsConstructor
 @EnableCaching
 @SpringBootApplication
 public class Application implements ApplicationRunner {
@@ -20,6 +23,7 @@ public class Application implements ApplicationRunner {
     public static final AtomicBoolean isMain = new AtomicBoolean(false);
     public static final AtomicBoolean isRunningForMain = new AtomicBoolean(false);
     public static final AtomicBoolean isRunningForEvent = new AtomicBoolean(false);
+    private final ApplicationArguments applicationArguments;
 
     public static void main(String[] args) {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class, args);
@@ -36,6 +40,8 @@ public class Application implements ApplicationRunner {
 
     public void start() {
         isRunningForMain.compareAndSet(false, true);
+        System.out.println(Arrays.toString(applicationArguments.getSourceArgs()));
+        System.out.println(applicationArguments.getNonOptionArgs());
     }
 
     @Bean
