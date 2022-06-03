@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @Slf4j
-@SpringBootTest
+@SpringBootTest(args = {"--myargs=hi"})
 public class ApplicationArgumentsTests {
     @Autowired
     String appString;
