@@ -42,6 +42,7 @@ public class Application implements ApplicationRunner {
         isRunningForMain.compareAndSet(false, true);
         System.out.println(Arrays.toString(applicationArguments.getSourceArgs()));
         System.out.println(applicationArguments.getNonOptionArgs());
+        System.out.println(applicationArguments.getOptionValues("myargs"));
     }
 
     @Bean
