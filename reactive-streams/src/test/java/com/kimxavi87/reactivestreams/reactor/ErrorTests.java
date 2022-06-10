@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 public class ErrorTests {
 
     @Test
-    public void noOptions() {
+    public void nothing() {
         // exception 이 발생해버리는 경우 0 만 나오고, 그 다음 스트림은 처리되지 않음 끝남
         // ERROR reactor.core.publisher.Operators - Operator called default onErrorDropped
         // reactor.core.Exceptions$ErrorCallbackNotImplemented 발생
@@ -18,6 +18,18 @@ public class ErrorTests {
                 .doOnNext(integer -> log.info("{}", integer))
                 .map(i -> i / 0)
                 .subscribe();
+    }
+
+    @Test
+    public void errorConsumer() {
+        // error consumer 가 있는 경우에도 handling 만 될 뿐 스트림은 멈춘다
+        Flux.range(0, 10)
+                .map(i -> i * 2)
+                .doOnNext(integer -> log.info("{}", integer))
+                .map(i -> i / 0)
+                .subscribe(integer -> {}, throwable -> {
+                    log.error("error", throwable);
+                });
     }
 
     @Test
