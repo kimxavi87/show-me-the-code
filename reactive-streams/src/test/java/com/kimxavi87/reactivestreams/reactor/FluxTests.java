@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
+import java.util.concurrent.Callable;
 
 @Slf4j
 public class FluxTests {
@@ -77,5 +78,32 @@ public class FluxTests {
     @Test
     public void monoCannotReturnNull() {
         // mono<?> 을 return null 로 하면 error 발생한다
+    }
+
+    @Test
+    public void using() {
+        // callable 처리로 받아서
+        // publisher 를 만든 다음에
+        // doOnNext 를 처리하고
+        // clean up 호출됨
+
+        // TODO eager true, false?
+        Flux.using(() -> "abc",
+                        Mono::just,
+                        s -> log.info("clean up {}", s),
+                        false)
+                .doOnNext(s -> log.info("doOnNext {}", s))
+                .subscribe();
+    }
+
+    @Test
+    public void usingWhen() {
+        // publisher source 를 뽑아내는 publisher를 만듦
+        // source 로 부터 resource 를 뽑아냄
+
+        // ex
+        // file open -> stream 만들어내서 전달
+        // stream 으로부터 file read 해서 뽑아냄
+        // async clean up
     }
 }
