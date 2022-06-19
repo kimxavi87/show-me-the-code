@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -65,6 +66,16 @@ public class PlayerRepositoryTests {
         // paging을 memory 에서 처리함
         List<Team> allByName = teamRepository.findByName("liverpool", PageRequest.of(0, 10));
         System.out.println(allByName.size());
+    }
+
+    @Test
+    public void sssss() {
+        createManyTeamsAndMembers();
+        em.flush();
+        em.clear();
+        // select * from member member0_ where member0_.id in (? , ? , ? , ? , ?)
+        Iterable<Member> allById = memberRepository.findAllById(Arrays.asList(1L, 2L, 3L, 4L, 5L));
+        System.out.println(allById);
     }
 
     @Test
