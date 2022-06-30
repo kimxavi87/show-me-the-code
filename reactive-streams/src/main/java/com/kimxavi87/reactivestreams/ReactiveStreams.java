@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 import reactor.core.publisher.Flux;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Flux;
 import java.time.Duration;
 
 @Slf4j
+@EnableR2dbcRepositories(basePackages = "com.kimxavi87.reactivestreams.product")
 @SpringBootApplication
 public class ReactiveStreams {
 

@@ -2,3 +2,11 @@ logging.level:
   org:
     springframework:
       r2dbc: DEBUG
+
+#spring:
+#  r2dbc:
+#    url: r2dbc:mysql://127.0.0.1:3306/testdb
+#    username: test
+#    password: test
+#    pool:
+#      max-size: 100
