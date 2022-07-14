@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.kafka.support.converter.MessagingMessageConverter;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.condition.EmbeddedKafkaCondition;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
@@ -36,12 +37,13 @@ public class EmbeddedKafkaTests {
 
     private static ReactiveKafkaConsumerTemplate<Integer, String> kafkaConsumer;
     private ReactiveKafkaProducerTemplate<Integer, String> kafkaProducer;
+    private static final EmbeddedKafkaBroker broker = EmbeddedKafkaCondition.getBroker();
 
     @BeforeAll
     public static void setUpBeforeClass() {
 
         Map<String, Object> consumerProps =
-                KafkaTestUtils.consumerProps(CONSUMER_GROUP_ID, "false", EmbeddedKafkaCondition.getBroker());
+                KafkaTestUtils.consumerProps(CONSUMER_GROUP_ID, "false", broker);
         kafkaConsumer =
                 new ReactiveKafkaConsumerTemplate<>(setupReceiverOptionsWithDefaultTopic(consumerProps));
 
@@ -101,7 +103,6 @@ public class EmbeddedKafkaTests {
                 .verify(DEFAULT_VERIFY_TIMEOUT);
     }
 
-    @Disabled
     @Test
     public void givenStringValue_whenHappenException_thenKeepReceive() throws InterruptedException {
         Flux.interval(Duration.ofSeconds(1))
@@ -115,15 +116,17 @@ public class EmbeddedKafkaTests {
         // consume도 더 하지 않는다 (문제 상황 확인 완료)
         // catch 하면 계속 진행됨
         kafkaConsumer.receive()
-                .doOnNext(consumerRecord -> System.out.println(consumerRecord.toString()))
+                .doOnNext(consumerRecord -> System.out.println("[CONSUME]" + consumerRecord.toString()))
                 .map(rr -> {
-                    try {
+//                    try {
                         throw new RuntimeException("Hello World!");
-                    } finally {
-                        System.out.println("Hello Finally");
-                        rr.receiverOffset().acknowledge();
-                    }
+//                    } finally {
+//                        System.out.println("Hello Finally");
+//                        rr.receiverOffset().acknowledge();
+//                    }
                 })
+                .onErrorContinue((e, o) -> System.out.println("ERORR CON"))
+                .doOnNext(s -> System.out.println("MAPMAP"))
                 .subscribe();
 //        kafkaConsumer.receiveAutoAck()
 //                .doOnNext(consumerRecord -> System.out.println(consumerRecord.toString()))
