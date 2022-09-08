@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Setter
-@Document(indexName = "fortest")
+@Document(indexName = "test-index-#{@elasticsearchIndexPattern.getToday()}", createIndex = false)
 public class TestLog {
     @Id
     private String id;
@@ -15,9 +15,9 @@ public class TestLog {
     @Field(type= FieldType.Text)
     private String title;
 
-    @Field(type= FieldType.Text)
+    @Field(type= FieldType.Ip)
     private String ip;
 
-    @Field(type= FieldType.Text)
+    @Field(type= FieldType.Keyword)
     private String data;
 }
