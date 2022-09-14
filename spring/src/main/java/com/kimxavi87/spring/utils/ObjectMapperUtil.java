@@ -73,4 +73,13 @@ public class ObjectMapperUtil {
 
         return map;
     }
+
+    public static String mapToJsonString(Map<String, ?> map) {
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }
