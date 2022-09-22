@@ -80,7 +80,7 @@ public class ObjectMapperUtil {
         return map;
     }
 
-    public static String mapToJsonString(Map<String, ?> map) {
+    public static String mapToJsonString(Map<?, ?> map) {
         try {
             return objectMapper.writeValueAsString(map);
         } catch (IOException e) {
