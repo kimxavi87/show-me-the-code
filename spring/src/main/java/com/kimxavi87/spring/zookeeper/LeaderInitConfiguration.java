@@ -1,5 +1,6 @@
 package com.kimxavi87.spring.zookeeper;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +15,10 @@ public class LeaderInitConfiguration {
     private String zookeeperHost;
 
     @Value("${config.leader.zookeeper.path}")
-    private String gtmSchedulerZookeeperPath;
+    private String zookeeperPath;
 
-    @Value("${config.leader.zookeeper.role:follower}")
-    private String gtmSchedulerZookeeperRole;
+    @Value("${config.leader.zookeeper.role:scheduler}")
+    private String zookeeperRole;
 
     @Bean
     public CuratorFrameworkFactoryBean curatorFrameworkFactoryBean() {
@@ -28,7 +29,7 @@ public class LeaderInitConfiguration {
     public LeaderInitiatorFactoryBean leaderInitiatorFactoryBean(CuratorFramework client) {
         return new LeaderInitiatorFactoryBean()
                 .setClient(client)
-                .setPath(gtmSchedulerZookeeperPath)
-                .setRole(gtmSchedulerZookeeperRole);
+                .setPath(zookeeperPath)
+                .setRole(zookeeperRole);
     }
 }

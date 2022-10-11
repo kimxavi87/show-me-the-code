@@ -19,11 +19,11 @@ public class LeaderInitAspect {
     public Object leaderAspectAround(ProceedingJoinPoint joinPoint) throws Throwable {
         System.out.println("[DBG] check leader follower");
         if (leaderInitiator.getContext().isLeader()) {
-            System.out.println("[DBG] It's Leader");
+            System.out.println("[DBG] leader " + leaderInitiator.getContext().getRole());
             return joinPoint.proceed();
         }
 
-        System.out.println("[DBG] It's Follower");
+        System.out.println("[DBG] follower " + leaderInitiator.getContext().getRole());
 
         return null;
     }
