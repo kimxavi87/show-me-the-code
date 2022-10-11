@@ -18,3 +18,9 @@ logging.level:
 
 my:
   id: 100
+
+config:
+  leader:
+    zookeeper:
+      host: localhost:2181
+      path: /test-leader/

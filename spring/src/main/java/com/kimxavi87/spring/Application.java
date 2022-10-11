@@ -9,11 +9,15 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@EnableAspectJAutoProxy
+@EnableScheduling
 @RequiredArgsConstructor
 @EnableCaching
 @SpringBootApplication
@@ -25,8 +29,9 @@ public class Application implements ApplicationRunner {
     public static final AtomicBoolean isRunningForEvent = new AtomicBoolean(false);
     private final ApplicationArguments applicationArguments;
 
-    public static void main(String[] args) {
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class, args);
+    public static void main(String[] args) throws Exception {
+        SpringApplication springApplication = new SpringApplication(Application.class);
+        ConfigurableApplicationContext applicationContext = springApplication.run(args);
         Application application = applicationContext.getBean(Application.class);
         application.start();
 

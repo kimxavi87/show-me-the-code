@@ -4,6 +4,7 @@ import com.kimxavi87.spring.player.controller.MemberController;
 import com.kimxavi87.spring.player.dto.MemberInput;
 import com.kimxavi87.spring.player.reposiotry.MemberRepository;
 import com.kimxavi87.spring.utils.ObjectMapperUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,7 @@ public class MemberControllerTests {
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
+    @Disabled
     @Test
     public void givenSmallerThanMinId_whenGetMemberById_thenBadRequest() throws Exception {
         mvc.perform(get("/member/4"))
@@ -87,6 +89,7 @@ public class MemberControllerTests {
                 .andReturn();
     }
 
+    @Disabled
     @Test
     public void givenWrongPageSize_whenRequestMemberList_thenBadRequest() throws Exception {
         MvcResult mvcResult = mvc.perform(get("/membersWithPageValid?size=101"))

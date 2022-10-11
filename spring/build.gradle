@@ -25,6 +25,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation "org.springframework.integration:spring-integration-zookeeper:5.5.3"
+
     implementation 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok'
