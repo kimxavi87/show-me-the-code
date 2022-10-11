@@ -29,7 +29,7 @@ public class Application implements ApplicationRunner {
     public static final AtomicBoolean isRunningForEvent = new AtomicBoolean(false);
     private final ApplicationArguments applicationArguments;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(Application.class);
         ConfigurableApplicationContext applicationContext = springApplication.run(args);
         Application application = applicationContext.getBean(Application.class);

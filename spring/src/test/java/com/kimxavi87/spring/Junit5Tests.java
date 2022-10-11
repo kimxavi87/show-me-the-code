@@ -46,6 +46,7 @@ public class Junit5Tests {
         log.info("assume true");
     }
 
+    @Disabled
     @Test
     public void testAssertThrows() {
         // Assertions
