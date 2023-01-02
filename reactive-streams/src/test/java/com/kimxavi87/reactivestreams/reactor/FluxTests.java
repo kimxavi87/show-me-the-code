@@ -106,4 +106,9 @@ public class FluxTests {
         // stream 으로부터 file read 해서 뽑아냄
         // async clean up
     }
+
+    @Test
+    public void shareDoFinally() {
+
+    }
 }
