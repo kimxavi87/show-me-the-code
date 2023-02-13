@@ -30,8 +30,6 @@ public class FluxTests {
     // requestFusion
 
     // conditional vs normal
-
-    @Disabled
     @Test
     public void interval() throws InterruptedException {
         Flux.interval(Duration.ofSeconds(1))

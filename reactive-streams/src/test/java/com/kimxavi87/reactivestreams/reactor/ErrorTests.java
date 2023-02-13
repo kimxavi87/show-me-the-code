@@ -89,9 +89,14 @@ public class ErrorTests {
                 .onErrorResume(throwable -> {
                     log.error("error", throwable);
                     //return Mono.empty();
-                    return Mono.just(10);
+                    return Mono.just(100000);
                 })
+                .doOnNext(integer -> log.info("after {}", integer))
+                .doOnError(integer -> log.info("ERROR"))
+                .log()
+                .onErrorReturn(100000000)
                 .onErrorContinue((throwable, o) -> log.info("continue {}", o))
+                .onErrorContinue((throwable, o) -> log.info("continue2 {}", o))
                 .subscribe();
     }
 }
