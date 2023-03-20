@@ -26,7 +26,7 @@ public class TeamController {
             return ResponseEntity.badRequest().build();
         }
 
-        log.info("team success : {}, {}", teamInput, bindingResult.toString());
+        log.info("team success : {}, {}", teamInput, bindingResult);
         return ResponseEntity.ok().build();
     }
 

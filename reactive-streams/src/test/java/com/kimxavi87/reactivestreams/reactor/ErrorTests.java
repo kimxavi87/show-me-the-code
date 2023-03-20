@@ -86,6 +86,7 @@ public class ErrorTests {
                 .map(i -> i * 2)
                 .doOnNext(integer -> log.info("{}", integer))
                 .map(i -> i / 0)
+                .onErrorReturn(100000000)
                 .onErrorResume(throwable -> {
                     log.error("error", throwable);
                     //return Mono.empty();
@@ -94,9 +95,12 @@ public class ErrorTests {
                 .doOnNext(integer -> log.info("after {}", integer))
                 .doOnError(integer -> log.info("ERROR"))
                 .log()
-                .onErrorReturn(100000000)
-                .onErrorContinue((throwable, o) -> log.info("continue {}", o))
-                .onErrorContinue((throwable, o) -> log.info("continue2 {}", o))
+//                .onErrorContinue((throwable, o) -> log.info("continue {}", o))
+//                .onErrorContinue((throwable, o) -> log.info("continue2 {}", o))
                 .subscribe();
+    }
+
+    @Test
+    public void onErrorNested() {
     }
 }

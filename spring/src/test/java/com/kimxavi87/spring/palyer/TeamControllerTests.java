@@ -1,6 +1,5 @@
 package com.kimxavi87.spring.palyer;
 
-import com.kimxavi87.spring.player.DeleteTeamsRequest;
 import com.kimxavi87.spring.player.dto.MemberInput;
 import com.kimxavi87.spring.player.dto.TeamInput;
 import com.kimxavi87.spring.utils.ObjectMapperUtil;
@@ -14,7 +13,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
