@@ -122,6 +122,24 @@ public class TcpServerTests {
                 })
                 .expectComplete()
                 .verify(Duration.ofMinutes(1));
+
+        Mono<? extends Connection> connectionMono2 = TcpClient.create()
+                .host("localhost")
+                .port(heartbeatServerPort)
+                .wiretap(true)
+                .handle((in, out) -> {
+                    return Flux.merge(out.sendString(Mono.just("Hello World2!")).neverComplete(),
+                            in.receive().then());
+                })
+                .connect();
+
+        StepVerifier.create(connectionMono2)
+                .assertNext(connection -> {
+                    assertThat(connection.isDisposed())
+                            .isEqualTo(false);
+                })
+                .expectComplete()
+                .verify(Duration.ofMinutes(1));
     }
 
     private static final class HeartbeatServer extends CountDownLatch implements Runnable {
@@ -159,15 +177,13 @@ public class TcpServerTests {
                         out.put((byte) '\n');
                         out.flip();
                         ch.write(out);
-                        Thread.sleep(100);
                     }
+                    ch.close();
                 }
             }
-            catch (IOException e) {
+            catch (Exception e) {
                 // Server closed
-            }
-            catch (InterruptedException ie) {
-                // ignore
+                System.out.println("CLOSE SERVER");
             }
         }
 
