@@ -20,6 +20,12 @@ public final class LinuxCommandsImpl implements LinuxCommands {
         return getProcesses();
     }
 
+    @Override
+    public void netstat() {
+        throw new UnsupportedOperationException();
+        // todo
+    }
+
     private List<ProcessInfo> getProcesses() {
         List<ProcessInfo> processes = new ArrayList<>();
         File procDir = new File("/proc");
