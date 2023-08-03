@@ -3,11 +3,14 @@ package com.kimxavi87.normal.dns;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.util.Strings;
+import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Test;
 import org.xbill.DNS.utils.base64;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -83,6 +86,30 @@ public class DnssecTests {
         } catch (NoSuchAlgorithmException e) {
             System.err.println("Error generating RSA key pair: " + e.getMessage());
         } catch (NoSuchProviderException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void crypto() {
+        try {
+            Security.addProvider(new BouncyCastleProvider());
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
+            keyPairGenerator.initialize(1024, new SecureRandom());
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+            RSAPrivateCrtKey privateKey = (RSAPrivateCrtKey)keyPair.getPrivate();
+            System.out.println(privateKey.getModulus());
+            byte[] beforeEncode = privateKey.getModulus().toByteArray();
+            System.out.println(new String(beforeEncode));
+            String baseStr = Base64.toBase64String(privateKey.getModulus().toByteArray());
+            System.out.println(baseStr);
+
+            byte[] afterDecode = Base64.decode(Strings.toByteArray(baseStr));
+            System.out.println(new String(afterDecode));
+            System.out.println(new BigInteger(afterDecode));
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
