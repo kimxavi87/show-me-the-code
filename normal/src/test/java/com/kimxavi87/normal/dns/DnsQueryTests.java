@@ -13,6 +13,7 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Resolver;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.SimpleResolver;
+import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 import org.xbill.DNS.utils.base64;
 
@@ -28,6 +29,19 @@ public class DnsQueryTests {
 
         Message response = resolver.send(query);
         return response.getSection(Section.ANSWER);
+    }
+
+    @Test
+    public void wire() throws TextParseException {
+        Record record = Record.newRecord(Name.fromString("."), Type.DNSKEY, DClass.IN);
+        byte[] bytes = record.toWire(Section.ANSWER);
+
+        for (int i = 0; i < bytes.length; i++) {
+            System.out.println((int) bytes[i]);
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
     }
 
     @Test

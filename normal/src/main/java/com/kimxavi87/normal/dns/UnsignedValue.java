@@ -1,10 +1,10 @@
 package com.kimxavi87.normal.dns;
 
-public class UnsignedValue {
+public abstract class UnsignedValue {
     private final long value;
     private final int bytes;
 
-    public UnsignedValue(long value, int bytes) {
+    protected UnsignedValue(long value, int bytes) {
         if (bytes > 4) {
             throw new IllegalArgumentException("bytes");
         }
