@@ -7,7 +7,7 @@ public class UnsignedValueTests {
     @Test
     void test_1byte() {
         // 1byte
-        UnsignedValue unsignedValue = new UnsignedValue(2, 1);
+        UnsignedValue unsignedValue = new DummyUnsignedValue(2, 1);
         System.out.println(unsignedValue.getValue());
         byte[] bytes = unsignedValue.toByteArray();
         System.out.println(bytes.length);
@@ -20,7 +20,7 @@ public class UnsignedValueTests {
     @Test
     void test_2byte() {
         // 2byte
-        UnsignedValue twoBytes = new UnsignedValue(32767, 2);
+        UnsignedValue twoBytes = new DummyUnsignedValue(32767, 2);
         byte[] bytes = twoBytes.toByteArray();
         System.out.println(bytes.length);
         System.out.println(bytes[0]);
@@ -29,7 +29,27 @@ public class UnsignedValueTests {
 
     @Test
     void test_4byte() {
-        UnsignedValue fourBytes = new UnsignedValue(32767, 4);
+        UnsignedValue fourBytes = new DummyUnsignedValue(32767, 4);
         System.out.println(fourBytes.getValue());
+    }
+
+    public static class DummyUnsignedValue extends UnsignedValue {
+
+        protected DummyUnsignedValue(long value, int bytes) {
+            super(value, bytes);
+        }
+    }
+
+    @Test
+    void unsigned_char() {
+        UnsignedShort unsignedShort = new UnsignedShort(255);
+        System.out.println(unsignedShort.getValue());
+
+        UnsignedCharacter unsignedCharacter = new UnsignedCharacter('C');
+        System.out.println(unsignedCharacter.getValue());
+        System.out.println(unsignedCharacter.getChar());
+
+        UnsignedCharacter unsignedCharacter2 = new UnsignedCharacter((char) 256);
+        System.out.println(unsignedCharacter2.getValue());
     }
 }
