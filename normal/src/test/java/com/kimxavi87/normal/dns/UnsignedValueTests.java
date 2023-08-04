@@ -49,7 +49,32 @@ public class UnsignedValueTests {
         System.out.println(unsignedCharacter.getValue());
         System.out.println(unsignedCharacter.getChar());
 
-        UnsignedCharacter unsignedCharacter2 = new UnsignedCharacter((char) 256);
-        System.out.println(unsignedCharacter2.getValue());
+        AssertThrow assertThrow = assertThrow(() -> {
+            UnsignedCharacter unsignedCharacter2 = new UnsignedCharacter((char) 256);
+            System.out.println(unsignedCharacter2.getValue());
+        });
+
+        assert assertThrow.getException() instanceof IllegalArgumentException;
+    }
+
+    private AssertThrow assertThrow(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Exception e) {
+            return new AssertThrow(e);
+        }
+        return null;
+    }
+
+    private static class AssertThrow {
+        private final Exception exception;
+
+        private AssertThrow(Exception e) {
+            this.exception = e;
+        }
+
+        public Exception getException() {
+            return exception;
+        }
     }
 }
