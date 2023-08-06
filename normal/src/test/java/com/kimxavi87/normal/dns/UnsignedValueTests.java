@@ -66,8 +66,8 @@ public class UnsignedValueTests {
         assert value.getValue() == 0;
         assert value.toBinaryString().equals("0");
 
-        // todo unsigned short 인데 long의 0 포지션으로 가면 안 됨
         value.setBit(0);
+        System.out.println(value.toBinaryString());
         assert value.toBinaryString().equals("1000000000000000");
 
         value.unsetBit(0);
@@ -77,6 +77,7 @@ public class UnsignedValueTests {
         value.setBit(0);
         assert value.toBinaryString().equals("1000000000000000");
 
-//        value.setBit(0);
+        value.setBit(3);
+        assert value.toBinaryString().equals("1001000000000000");
     }
 }
