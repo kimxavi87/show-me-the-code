@@ -1,6 +1,9 @@
 package com.kimxavi87.normal.dns;
 
+import com.kimxavi87.normal.AssertThrow;
 import org.junit.jupiter.api.Test;
+
+import static com.kimxavi87.normal.AssertTools.assertThrow;
 
 public class UnsignedValueTests {
 
@@ -57,24 +60,23 @@ public class UnsignedValueTests {
         assert assertThrow.getException() instanceof IllegalArgumentException;
     }
 
-    private AssertThrow assertThrow(Runnable runnable) {
-        try {
-            runnable.run();
-        } catch (Exception e) {
-            return new AssertThrow(e);
-        }
-        return null;
-    }
+    @Test
+    void setBit() {
+        UnsignedShort value = new UnsignedShort(0);
+        assert value.getValue() == 0;
+        assert value.toBinaryString().equals("0");
 
-    private static class AssertThrow {
-        private final Exception exception;
+        // todo unsigned short 인데 long의 0 포지션으로 가면 안 됨
+        value.setBit(0);
+        assert value.toBinaryString().equals("1000000000000000");
 
-        private AssertThrow(Exception e) {
-            this.exception = e;
-        }
+        value.unsetBit(0);
+        System.out.println(value.getValue());
+        assert value.toBinaryString().equals("0");
 
-        public Exception getException() {
-            return exception;
-        }
+        value.setBit(0);
+        assert value.toBinaryString().equals("1000000000000000");
+
+//        value.setBit(0);
     }
 }
