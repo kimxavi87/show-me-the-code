@@ -33,24 +33,42 @@ public abstract class UnsignedValue {
     }
 
     public void setBit(int pos) {
-        this.value |= getMask(pos);
+        this.value |= shiftValue(pos, 1L);
     }
 
     public void unsetBit(int pos) {
-        this.value &= ~(getMask(pos));
+        this.value &= getMask(pos, 1);
+    }
+
+    public void setBits(int pos, int bitsRange, long value) {
+        this.value &= getMask(pos, bitsRange);
+        this.value |= shiftValue(pos + (bitsRange - 1), value);
     }
 
     public String toBinaryString() {
         return Long.toBinaryString(getValue());
     }
 
-    private long getMask(int pos) {
+    private long getMask(int pos, int bitsRange) {
+        long mask = 1L;
+
+        for (int i = 0; i < bitsRange - 1; i++) {
+            mask <<= 1;
+            mask |= 1;
+        }
+
+        mask = shiftValue(pos + (bitsRange - 1), mask);
+
+        return ~mask;
+    }
+
+    private long shiftValue(int pos, long value) {
         int bitPosition = bytes * 8 - pos - 1;
         if (pos < 0 || bitPosition < 0) {
             throw new IllegalArgumentException("out of range (pos)");
         }
 
-        return 1L << bitPosition;
+        return value << bitPosition;
     }
 
     private void checkRange(long value) {

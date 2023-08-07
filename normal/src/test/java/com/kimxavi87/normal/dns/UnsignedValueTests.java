@@ -68,6 +68,7 @@ public class UnsignedValueTests {
 
         value.setBit(0);
         System.out.println(value.toBinaryString());
+        System.out.println(value.getValue());
         assert value.toBinaryString().equals("1000000000000000");
 
         value.unsetBit(0);
@@ -79,5 +80,13 @@ public class UnsignedValueTests {
 
         value.setBit(3);
         assert value.toBinaryString().equals("1001000000000000");
+    }
+
+    @Test
+    void setBits() {
+        UnsignedShort value = new UnsignedShort(32768 + 1 + 4 + 2 + 8 + 16 + (32768 / 2));
+        System.out.println(value.toBinaryString());
+        value.setBits(1, 4, 3);
+        System.out.println(value.toBinaryString());
     }
 }
