@@ -44,13 +44,19 @@ public class UnsignedValueTests {
     }
 
     @Test
-    void unsigned_char() {
+    void unsigned_short() {
         UnsignedShort unsignedShort = new UnsignedShort(255);
         System.out.println(unsignedShort.getValue());
+        assert unsignedShort.getValue() == 255;
+    }
 
+    @Test
+    void unsigned_char() {
         UnsignedCharacter unsignedCharacter = new UnsignedCharacter('C');
         System.out.println(unsignedCharacter.getValue());
         System.out.println(unsignedCharacter.getChar());
+
+        assert unsignedCharacter.getChar() == 'C';
 
         AssertThrow assertThrow = assertThrow(() -> {
             UnsignedCharacter unsignedCharacter2 = new UnsignedCharacter((char) 256);
