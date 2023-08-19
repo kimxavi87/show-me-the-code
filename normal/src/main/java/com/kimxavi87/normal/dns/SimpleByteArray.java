@@ -1,4 +1,4 @@
-package com.kimxavi87.normal;
+package com.kimxavi87.normal.dns;
 
 import java.util.Arrays;
 

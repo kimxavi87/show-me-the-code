@@ -1,6 +1,5 @@
 package com.kimxavi87.normal.dns;
 
-import com.kimxavi87.normal.SimpleByteArray;
 import org.junit.jupiter.api.Test;
 
 public class SimpleByteArrayTests {
