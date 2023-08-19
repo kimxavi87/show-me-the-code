@@ -1,5 +1,7 @@
 package com.kimxavi87.normal;
 
+import java.util.Arrays;
+
 public class SimpleByteArray {
     private byte[] byteArr;
     private int idx;
@@ -49,5 +51,13 @@ public class SimpleByteArray {
 
     public int length() {
         return byteArr.length;
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleByteArray{" +
+                "byteArr=" + Arrays.toString(getByteArr()) +
+                ", idx=" + idx +
+                '}';
     }
 }
