@@ -19,6 +19,9 @@ logging.level:
 my:
   id: 100
 
+mymy:
+  idid: 200
+
 config:
   leader:
     zookeeper:
