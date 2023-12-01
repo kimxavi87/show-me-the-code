@@ -97,12 +97,11 @@ public class MockTableTests {
         }
 
         public T deleteById(long id) {
-            int idx = 0;
-            for (Map<String, Object> datum : data) {
+            for (int i = 0; i < data.size(); i++) {
+                Map<String, Object> datum = data.get(i);
                 if (datum.get("id") != null && (Long) datum.get("id") == id) {
-                    return mapToObject(data.remove(idx));
+                    return mapToObject(data.remove(i));
                 }
-                idx++;
             }
 
             return null;
