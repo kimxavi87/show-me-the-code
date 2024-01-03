@@ -1,0 +1,61 @@
+buildscript {
+    ext {
+    }
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+    }
+}
+
+
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.11
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    configurations {
+        developmentOnly
+        runtimeClasspath {
+            extendsFrom developmentOnly
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+    }
+
+    test {
+        maxHeapSize = "1024m"
+        outputs.upToDateWhen { false }
+
+        useJUnitPlatform {
+            excludeTags 'slow'
+            includeEngines 'junit-jupiter', 'junit-vintage'
+        }
+
+        afterTest { desc, result ->
+            logger.quiet "Executing test [${desc.className}] ${desc} ==> ${result}"
+        }
+    }
+}
