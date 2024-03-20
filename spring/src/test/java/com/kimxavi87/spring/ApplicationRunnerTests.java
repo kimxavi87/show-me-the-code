@@ -1,12 +1,16 @@
 package com.kimxavi87.spring;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class ApplicationRunnerTests {
+    @Autowired
+    ApplicationContext applicationContext;
 
     @Test
     public void gwt() {
@@ -21,5 +25,11 @@ public class ApplicationRunnerTests {
         // main은 실행 안 되는군
         assertThat(Application.isMain.get()).isEqualTo(false);
         assertThat(Application.isRunningForMain.get()).isEqualTo(false);
+    }
+
+    @Test
+    public void test() {
+        com.kimxavi87.spring.TestComponent bean = applicationContext.getBean(TestComponent.class);
+        System.out.println(bean.getClass());
     }
 }
