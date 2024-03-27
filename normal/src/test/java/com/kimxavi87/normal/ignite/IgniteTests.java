@@ -103,16 +103,17 @@ public class IgniteTests {
                 "CREATE TABLE IF NOT EXISTS Person (id INT PRIMARY KEY, name VARCHAR, timestamp INT) WITH \"VALUE_TYPE=%s\"",
                 Person.class.getName())).setSchema("PUBLIC")).getAll();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 2000; i++) {
             insertPerson(i, "person " + i);
         }
 
         long startTime = System.currentTimeMillis();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 2000; i++) {
             client.query(new SqlFieldsQuery("UPDATE Person SET timestamp = ? WHERE id = ?")
                     .setArgs(i, i).setSchema("PUBLIC")).getAll();
         }
+
         long endTime = System.currentTimeMillis();
 
         // 실행 시간 계산 (밀리초 단위)

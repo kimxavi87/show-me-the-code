@@ -1,4 +1,4 @@
 rootProject.name = 'show-me-the-code'
 
 include 'spring'
-include 'zookeeper-starter'
+//include 'zookeeper-starter'
